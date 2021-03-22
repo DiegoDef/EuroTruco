@@ -13,7 +13,7 @@ def grava_cartas(c, nomes_jogadores):
                 "C": (list(c[1][2])[0], list(c[1][2].values())[0].title())}
         print(j2_c)
 
-        with open(f"{nomes_jogadores[0]}.txt", "w") as j1, open(f"{nomes_jogadores[1]}.txt", "w") as j2:
+        with open(f"cartas\\{nomes_jogadores[0]}.txt", "w") as j1, open(f"cartas\\{nomes_jogadores[1]}.txt", "w") as j2:
             j1.write(f"Olá {nomes_jogadores[0]}! Suas cartas estão logo abaixo. Boa sorte!\n\n"
                      f"A: {list(c[0][0])[0]} de {list(c[0][0].values())[0].title()}\n"
                      f"B: {list(c[0][1])[0]} de {list(c[0][1].values())[0].title()}\n"
@@ -42,7 +42,7 @@ def grava_cartas(c, nomes_jogadores):
                 "C": (list(c[3][2])[0], list(c[3][2].values())[0].title())}
         print(j4_c)
 
-        with open(f"{nomes_jogadores[0]}.txt", "w") as j1, open(f"{nomes_jogadores[1]}.txt", "w") as j2:
+        with open(f"cartas\\{nomes_jogadores[0]}.txt", "w") as j1, open(f"cartas\\{nomes_jogadores[1]}.txt", "w") as j2:
             j1.write(f"Olá {nomes_jogadores[0]}! Suas cartas estão logo abaixo. Boa sorte!\n\n"
                      f"A: {list(c[0][0])[0]} de {list(c[0][0].values())[0].title()}\n"
                      f"B: {list(c[0][1])[0]} de {list(c[0][1].values())[0].title()}\n"
@@ -51,7 +51,7 @@ def grava_cartas(c, nomes_jogadores):
                      f"A: {list(c[1][0])[0]} de {list(c[1][0].values())[0].title()}\n"
                      f"B: {list(c[1][1])[0]} de {list(c[1][1].values())[0].title()}\n"
                      f"C: {list(c[1][2])[0]} de {list(c[1][2].values())[0].title()}\n")
-        with open(f"{nomes_jogadores[2]}.txt", "w") as j3, open(f"{nomes_jogadores[3]}.txt", "w") as j4:
+        with open(f"cartas\\{nomes_jogadores[2]}.txt", "w") as j3, open(f"cartas\\{nomes_jogadores[3]}.txt", "w") as j4:
             j3.write(f"Olá {nomes_jogadores[2]}! Suas cartas estão logo abaixo. Boa sorte!\n\n"
                      f"A: {list(c[2][0])[0]} de {list(c[2][0].values())[0].title()}\n"
                      f"B: {list(c[2][1])[0]} de {list(c[2][1].values())[0].title()}\n"

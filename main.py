@@ -14,14 +14,14 @@ j1 = 0
 j2 = 0
 nomes = ["Diego", "Michele", "Diego2", "Michele2"]
 pontua = [0, 0]
-"""quant_j = int(input("Bem vindo ao Euro Truco simulator®\n\n"
+quant_j = int(input("Bem vindo ao Euro Truco simulator®\n\n"
                     "Antes de começar, informe a quantidade de participantes (2 ou 4): "))
 while quant_j != 2 and quant_j != 4:
     quant_j = int(input("Quantidade incorreta, por favor informe 2 ou 4 jogadores: "))
 
 nomes = []
 while len(nomes) < quant_j:
-    nomes.append(input(f"Informe o nome do {len(nomes) + 1}° jogador(a): "))"""
+    nomes.append(input(f"Informe o nome do {len(nomes) + 1}° jogador(a): "))
 
 print(f"A partida começou!\n")
 
@@ -49,6 +49,7 @@ while j1 < 12 and j2 < 12:
         print(f"\nA pontuação do jogo atual é: {nomes[0]} e {nomes[2]} {j1} X {j2} {nomes[1]} e {nomes[3]}\n")
         if j1 < 12 and j2 != 12:
             input("Quem chegar a 12 pontos primeiro será o vencedor! Aperte Enter para continuar a partida.\n")
+
     if j1 == 11 and j2 < 11:
         print("A equipe 2 jogará a partida valendo 3 pontos por rodada. A equipe 1 poderá escolher se deseja "
               "seguir com a partida analisando todas as cartas de sua(s) mão(s).\n"

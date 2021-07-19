@@ -84,7 +84,7 @@ def iniciar_jogo(comandos, nomes, baralho, pontua, ultimo_jogador=0):
                         if primeira:
                             print("Não é possível esconder a carta na primeira jogada.")
                         else:
-                            print("Você vai esconder sua carta!")
+                            print("Você escondeu sua carta!")
                             c_escondida = True
                     else:
                         carta_j1 = input("Você pediu truco, o time rival aceita aumentar a pontuação da partida? "

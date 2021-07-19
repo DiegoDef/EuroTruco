@@ -1,3 +1,5 @@
+# esse sistema não vai mais ser usado após o uso de orientação e objetos
+
 def gera_cartas(*args):
     """Deve ser passado como parâmetro os nomes dos jogadores. Gera um baralho e retorna o baralho restante,
     retira as cartas 8 e 9, retorna as cartas dadas aos 2 ou 4 jogadores (a depender da quantidade de nomes passados)

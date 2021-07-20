@@ -87,12 +87,14 @@ class Carta(Baralho):
 
 
 class Player:
+    nomes_dos_jogadores = []
 
     def __init__(self, nome_do_jogador):
         self.__nome = nome_do_jogador
         self.__carta_a = Carta()
         self.__carta_b = Carta()
         self.__carta_c = Carta()
+        Player.nomes_dos_jogadores.append(nome_do_jogador)
 
     def jogar_carta(self, id_carta):
         cartas = {"A": self.__carta_a, "B": self.__carta_b, "C": self.__carta_c}

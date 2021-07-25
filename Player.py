@@ -87,19 +87,21 @@ class Carta(Baralho):
 
 
 class Player:
-    nomes_dos_jogadores = []
+    players_name = []
+    player1 = []
+    player2 = []
 
-    def __init__(self, nome_do_jogador):
-        self.__nome = nome_do_jogador
+    def __init__(self, player_name):
+        self.__nome = player_name
         self.__carta_a = Carta()
         self.__carta_b = Carta()
         self.__carta_c = Carta()
-        Player.nomes_dos_jogadores.append(nome_do_jogador)
+        Player.players_name.append(player_name)
 
     def jogar_carta(self, id_carta):
         cartas = {"A": self.__carta_a, "B": self.__carta_b, "C": self.__carta_c}
         while id_carta.upper not in ("A", "B", "C"):
-            id_carta = input(f"Carta {id_carta.upper} não disponível para uso, escolha outra carta: ").upper()
+            id_carta = input(f"CARta {id_carta.upper} não disponível para uso, escolha outra CARta: ").upper()
         return cartas[id_carta]
 
     def pedir_truco(self):
@@ -107,7 +109,7 @@ class Player:
 
     def mostrar_cartas_disponiveis(self):
         id_carta = {0: "A", 1: "B", 2: "C"}
-        print(f"As cartas disponíveis de {self.nome} são: ", end=" ")
+        print(f"As CARtas disponíveis de {self.nome} são: ", end=" ")
         for i, j in zip((self.carta_a, self.carta_b, self.carta_c), range(3)):
             if i.naipe:
                 if j < 2:
@@ -145,7 +147,7 @@ class Player:
         self.__carta_b = value
 
     def __str__(self):
-        return f"Nome: {self.__nome}\nCartas: {self.carta_a.numero} de {self.carta_a.naipe}, " \
+        return f"Nome: {self.__nome}\nCARtas: {self.carta_a.numero} de {self.carta_a.naipe}, " \
                f"{self.carta_b.numero} de {self.carta_b.naipe} e {self.carta_c.numero} de {self.carta_c.naipe}"
 
 

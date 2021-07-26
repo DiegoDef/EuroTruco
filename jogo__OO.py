@@ -6,11 +6,8 @@ def main():
 
 
 def euro_truco():
-    pontuacao_jogo = [0, 0]  # pontuacao do jogo time 1 e 2, ganha quem chegar a 12
     players = []
-
     quant_j = 0
-    carta_virada = Carta()
 
     while quant_j not in (2, 4):
         quant_j = int(input("Bem vindo ao Euro Truco simulator®\n\n"
@@ -29,52 +26,55 @@ def euro_truco():
         print("Os jogadores 1 e 2 enfrentarão os jogadores 3 e 4.")
         while len(players) < 4:
             players.append(Player(input(f"\nInforme o nome do jogador(a) número {len(players) + 1}: ")))
-        players = players.insert(2, players.pop(1))  #  Ajeita na ordem de jogadores utilizado no jogo
+        players = players.insert(2, players.pop(1))  # Ajeita na ordem de jogadores utilizado no jogo
         Player.player1.append(players[:2])
         Player.player2.append(players[2:])
 
-
-
     print("A partida vai começar, peguem suas CARtas e prepare-se para a batalha!")
 
-    iniciar_jogo(players, quant_j)
+    iniciar_jogo(players)  # termina quando alguém chegar a 12 pontos
 
 
-def iniciar_jogo(players: list, quant_j: int, pontuacao_jogo=None, prox_jogador=[0]):
-    if pontuacao_jogo is None:
-        pontuacao_jogo = [0, 0]
-        if quant_j == 4:
-            prox_jogador = [0, 0]
-    pontuacao_rodada = [0, 0]  # ganha quem chegar a 3 primeiro
-    carta_virada = Carta.da_carta
-    mao_de_11 = False  # com a mãe de onze True, as cartas não são mostradas nem no arquivo .txt nem no terminal.
+def iniciar_jogo(players: list, prox_jogador: int = 0):
+    pontuacao_jogo = (Player.score1, Player.score2)
+    round_score = [0, 0]  # ganha quem chegar a 3 primeiro
+    turn_card = Carta.da_carta
+    mao_de_11 = False  # com a mãe de onze True, as cartas não são mostradas antes de jogar
     cont = 0
-
     print("\n<|##################################################################|>\n")
+    # colocar a parte seguinte em uma função quando terminada
     while True:
+        anybody_won = False
         jogador_atual = ""
         # colocar quem fez a primeira na hora de marcar os pontos.
-        print(f"\nPontuação da rodada: Time 1 {pontuacao_rodada[0]} x "
-              f"{pontuacao_rodada[1]} Time 2")
+        print(f"\nPontuação da rodada: Time 1 {round_score[0]} x "
+              f"{round_score[1]} Time 2")
         print("Comandos disponíveis para cada jogador:")
         mostrar_cartas_disponiveis()
-        print(f"\nA carta virada é: {carta_virada}")
+        print(f"\nA carta virada é: {turn_card}")
+
+        print("Comandos disponíveis para cada jogador:")
+        [print(f"{player.name}: {player.available_cards()}") for player in players]
+        print(f"\nA carta virada é: {turn_card}")
+
+
+
+
+
         cont += 1
 
-        prox_jogador = who_play(prox_jogador)
-
-        if True:  # mudar condição mais tarde
-            print("\n<|##################################################################|>\n")
+        if max(round_score) == 2 or anybody_won:  # mudar condição mais tarde
             break
+    print("\n<|##################################################################|>\n")
 
-    print(f"\nPontuação da partida: Time 1 {pontuacao_jogo[0]} x "
+    print(f"\nPontuação da partida: Time 1 {Player.score1} x "
           f"{pontuacao_jogo[1]} Time 2")
 
     if max(pontuacao_jogo) < 12:
         if pontuacao_jogo[0] == 11 and pontuacao_jogo[1] == 11:
             mao_de_11 = True
         else:
-            iniciar_jogo(players, quant_j, pontuacao_jogo)
+            iniciar_jogo(players, prox_jogador)
         pass
     else:
         answer = input('Gostaria de jogar outra partida? ("S" para sim ou "N" para não): ')
@@ -83,19 +83,18 @@ def iniciar_jogo(players: list, quant_j: int, pontuacao_jogo=None, prox_jogador=
         print()
         main()
 
-
 def congratualation(game_score: list) -> None:
-    players = Player.players_name
+    n_players = len(Player.player1)
     if game_score[0] == 12:
-        if len(players) == 2:
-            print(f"Parabéns {players[0]} você foi o(a) grande vencedor(a)!!!")
+        if n_players == 2:
+            print(f"Parabéns {Player.player1[0]} você foi o(a) grande vencedor(a)!!!")
         else:
-            print(f"Parabéns {players[0]} e {players[1]}, você venceram!")
+            print(f"Parabéns {Player.player1[0]} e {Player.player1[1]}, você venceram!")
     else:
-        if len(players) == 2:
-            print(f"Parabéns {players[1]} você foi o(a) grande vencedor(a)!!!")
+        if n_players == 2:
+            print(f"Parabéns {Player.player2[0]} você foi o(a) grande vencedor(a)!!!")
         else:
-            print(f"Parabéns {players[1][0]} e {players[1][1]}, você venceram!")
+            print(f"Parabéns {Player.player2[0]} e {Player.player1[1]}, você venceram!")
 
 
 def full_round():
@@ -103,10 +102,6 @@ def full_round():
 
 
 def jogar_carta():
-    pass
-
-
-def who_play(prox_jogador: list) -> list:
     pass
 
 
@@ -120,6 +115,5 @@ def verifica_regras():
 
 def mostrar_cartas_disponiveis():
     pass
-
 
 # passar algums fuções para cá, como a de criação de baralho.

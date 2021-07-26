@@ -37,7 +37,7 @@ class Baralho:
                 shuffle(list2)
                 naipe = choice(list1)
                 numero = choice(list2)
-                #print("naipe", naipe, "numero", numero)
+                # print("naipe", naipe, "numero", numero)
             if self.baralho[naipe][numero] != 0:
                 carta = {list(self.baralho[naipe].keys())[numero - 1]: self.baralho[naipe][numero]}
                 # cartas.append(carta)
@@ -87,16 +87,28 @@ class Carta(Baralho):
 
 
 class Player:
-    players_name = []
-    player1 = []
+    player1 = []  # time 1 no jogo, pode conter 1 ou 2 jogadores
     player2 = []
+    score1 = 0  # pontuacao do jogo time 1 e 2, ganha quem chegar a 12
+    score2 = 0
 
-    def __init__(self, player_name):
-        self.__nome = player_name
+    def __init__(self: object, player_name: str):
+        self.__name = player_name
         self.__carta_a = Carta()
         self.__carta_b = Carta()
         self.__carta_c = Carta()
-        Player.players_name.append(player_name)
+        self.__available_cards: list = ["A", "B", "C"]
+
+    def available_cards(self: object) -> str:  # verificar se esses tipos estao corretos
+        commands: list = self.__available_cards
+        string: str = ""
+        for n in commands:
+            string += f"{n}, "
+            if n != commands[-1]:
+                string += n+", "
+            else:
+                string += n
+        return string
 
     def jogar_carta(self, id_carta):
         cartas = {"A": self.__carta_a, "B": self.__carta_b, "C": self.__carta_c}
@@ -118,9 +130,8 @@ class Player:
                     print(id_carta[j])
 
     @property
-    def nome(self):
-        return self.__nome
-
+    def name(self):
+        return self.__name
 
     @property
     def carta_a(self):
@@ -149,8 +160,6 @@ class Player:
     def __str__(self):
         return f"Nome: {self.__nome}\nCARtas: {self.carta_a.numero} de {self.carta_a.naipe}, " \
                f"{self.carta_b.numero} de {self.carta_b.naipe} e {self.carta_c.numero} de {self.carta_c.naipe}"
-
-
 
     """def gravar_cartas(self):
         if len(nomes_jogadores) == 2:

@@ -13,7 +13,7 @@ class Baralho:
                            {}.fromkeys(range(1, 13), "copas"),
                            {}.fromkeys(range(1, 13), "paus")]
 
-    def da_carta(self):
+    def get_card(self):
         """Retornar uma carta para o jogador garantindo a aleatoriedade"""
         from random import randint, choice, shuffle
 
@@ -46,19 +46,20 @@ class Baralho:
 
     @property
     def get_baralho(self):
-        return self.baralho
+        return Baralho.baralho
 
 
 class Carta(Baralho):
 
     def __init__(self):
-        x = self.da_carta().items()
+        x = self.get_card().items()
         self.__numero = list(x)[0][0]
         self.__naipe = list(x)[0][1]
 
     @property
     def numero(self):
         """Retorna o numero da carta"""
+        print(self.__numero)
         return self.__numero
 
     @property
@@ -105,7 +106,7 @@ class Player:
         for n in commands:
             string += f"{n}, "
             if n != commands[-1]:
-                string += n+", "
+                string += n + ", "
             else:
                 string += n
         return string
@@ -121,7 +122,7 @@ class Player:
 
     def mostrar_cartas_disponiveis(self):
         id_carta = {0: "A", 1: "B", 2: "C"}
-        print(f"As CARtas disponíveis de {self.nome} são: ", end=" ")
+        print(f"As CARtas disponíveis de {self.name} são: ", end=" ")
         for i, j in zip((self.carta_a, self.carta_b, self.carta_c), range(3)):
             if i.naipe:
                 if j < 2:
@@ -173,8 +174,16 @@ class Player:
             print(j2_c)"""
 
 
-pessoa = Player("Rodrigo")
-pessoa.mostrar_cartas_disponiveis()
+if __name__ == "__main__":
+    pessoa = Player("Rodrigo")
+    pessoa.mostrar_cartas_disponiveis()
+
+    # Descobrir como receber um número inteiro e não um objeto no número da carta.
+
+    manilha: int = Carta.numero
+    print(manilha)
+    print(Baralho.baralho)
+
 
 """pessoa = Player("Rodrigo")
 print(pessoa.carta_a.naipe)

@@ -37,10 +37,11 @@ def euro_truco() -> None:
 
 def iniciar_jogo(players: list, prox_jogador: int = 0) -> None:
     game_score: tuple = (Player.score1, Player.score2)
-    turn_card: Carta = Carta.da_carta
+    manilha: int = Carta.numero   # manilha do jogo é o número da carta virada + 1
     mao_de_11: bool = False  # com a mãe de onze True, as cartas não são mostradas antes de jogar
 
     print("\n<|##################################################################|>\n")
+
     # colocar a parte seguinte em uma função quando terminada
     while True:
         round_score: list = [0, 0]  # ganha quem chegar a 3 primeiro
@@ -51,10 +52,10 @@ def iniciar_jogo(players: list, prox_jogador: int = 0) -> None:
               f"{round_score[1]} Time 2")
         print("Comandos disponíveis para cada jogador:")
         mostrar_cartas_disponiveis()
-        print(f"\nA carta virada é: {turn_card}")
+        print(f"\nA carta virada é: {manilha}")
         print("Comandos disponíveis para cada jogador:")
         [print(f"{player.name}: {player.available_cards()}") for player in players]
-        print(f"\nA carta virada é: {turn_card}")
+        print(f"\nA carta virada é: {manilha}")
 
 
 
@@ -98,11 +99,12 @@ def congratualation(game_score: list) -> None:
             print(f"Parabéns {Player.player2[0]} e {Player.player1[1]}, você venceram!")
 
 
-def full_round():
+def full_round() -> None:
+    """Termina quando alguém chega a 2 pontos sem empate."""
     pass
 
 
-def draw(scores: list) -> list:
+def draw(scores: list, manilha: int) -> list:
     if sum(scores) == 0:
         return [1, 1]
     elif scores[0] == 1:
@@ -111,11 +113,6 @@ def draw(scores: list) -> list:
         return [scores[0], 2]
     else:
         return [1, 1]
-
-
-
-def jogar_carta():
-    pass
 
 
 def verificar_quem_venceu():

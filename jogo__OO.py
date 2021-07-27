@@ -1,4 +1,4 @@
-from Player import Player, Carta
+from Player import Player, Carta, Baralho
 
 
 def main() -> None:
@@ -37,7 +37,7 @@ def euro_truco() -> None:
 
 def iniciar_jogo(players: list, prox_jogador: int = 0) -> None:
     game_score: tuple = (Player.score1, Player.score2)
-    manilha: int = Carta.numero   # manilha do jogo é o número da carta virada + 1
+    manilha: int = Carta().numero   # manilha do jogo é o número da carta virada + 1
     mao_de_11: bool = False  # com a mãe de onze True, as cartas não são mostradas antes de jogar
 
     print("\n<|##################################################################|>\n")
@@ -54,7 +54,7 @@ def iniciar_jogo(players: list, prox_jogador: int = 0) -> None:
         mostrar_cartas_disponiveis()
         print(f"\nA carta virada é: {manilha}")
         print("Comandos disponíveis para cada jogador:")
-        [print(f"{player.name}: {player.available_cards()}") for player in players]
+        [print(f"{player.name}: {player.available_cards}") for player in players]
         print(f"\nA carta virada é: {manilha}")
 
 
@@ -66,6 +66,8 @@ def iniciar_jogo(players: list, prox_jogador: int = 0) -> None:
         if max(round_score) == 2:  # mudar condição mais tarde
 
             break
+    reset_baralho()
+
     print("\n<|##################################################################|>\n")
 
     print(f"\nPontuação da partida: Time 1 {Player.score1} x "
@@ -78,6 +80,7 @@ def iniciar_jogo(players: list, prox_jogador: int = 0) -> None:
             iniciar_jogo(players, prox_jogador)
         pass
     else:
+        congratulation()
         answer: str = input('Gostaria de jogar outra partida? ("S" para sim ou "N" para não): ')
         while answer.upper() not in ("S", "N"):
             answer = input('Entrada incorreta, por favor digite apenas "S" para sim ou "N" para não: ')
@@ -85,9 +88,9 @@ def iniciar_jogo(players: list, prox_jogador: int = 0) -> None:
         main()
 
 
-def congratualation(game_score: list) -> None:
+def congratulation() -> None:
     n_players: int = len(Player.player1)
-    if game_score[0] == 12:
+    if Player.score1 >= 12:
         if n_players == 2:
             print(f"Parabéns {Player.player1[0]} você foi o(a) grande vencedor(a)!!!")
         else:
@@ -104,7 +107,7 @@ def full_round() -> None:
     pass
 
 
-def draw(scores: list, manilha: int) -> list:
+def draw(scores: list) -> list:
     if sum(scores) == 0:
         return [1, 1]
     elif scores[0] == 1:
@@ -113,6 +116,13 @@ def draw(scores: list, manilha: int) -> list:
         return [scores[0], 2]
     else:
         return [1, 1]
+
+
+def reset_baralho() -> None:
+    Baralho.baralho = [{}.fromkeys(range(1, 13), "moles"),
+                       {}.fromkeys(range(1, 13), "espadas"),
+                       {}.fromkeys(range(1, 13), "copas"),
+                       {}.fromkeys(range(1, 13), "paus")]
 
 
 def verificar_quem_venceu():

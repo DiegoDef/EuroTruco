@@ -1,28 +1,21 @@
 class Baralho:
-    baralho = [{}.fromkeys(range(1, 13), "moles"),
+    baralho: list = [{}.fromkeys(range(1, 13), "moles"),
                {}.fromkeys(range(1, 13), "espadas"),
                {}.fromkeys(range(1, 13), "copas"),
                {}.fromkeys(range(1, 13), "paus")]
-    remove = (8, 9)
+    remove: tuple = (8, 9)
 
-    @staticmethod
-    def reset_baralho():
-        """Gera um baralho de truco"""
-        Baralho.baralho = [{}.fromkeys(range(1, 13), "moles"),
-                           {}.fromkeys(range(1, 13), "espadas"),
-                           {}.fromkeys(range(1, 13), "copas"),
-                           {}.fromkeys(range(1, 13), "paus")]
-
-    def get_card(self):
+    def get_card(self) -> dict:
         """Retornar uma carta para o jogador garantindo a aleatoriedade"""
         from random import randint, choice, shuffle
 
-        carta = 0
+        carta: dict = {}
         #  if len(self.baralho) == 0:  não deve precisar, retirar no futuro
         #  self.baralho()
 
-        while carta == 0:
-            numero = self.remove[0]
+        # refazer aleatoriedade das cartas
+        while carta == {}:
+            numero: int = self.remove[0]
             naipe = 0
             while numero in self.remove:
                 list1 = []
@@ -45,7 +38,7 @@ class Baralho:
         return carta
 
     @property
-    def get_baralho(self):
+    def get_baralho(self) -> list:
         return Baralho.baralho
 
 
@@ -59,7 +52,6 @@ class Carta(Baralho):
     @property
     def numero(self):
         """Retorna o numero da carta"""
-        print(self.__numero)
         return self.__numero
 
     @property
@@ -94,31 +86,19 @@ class Player:
     score2 = 0
 
     def __init__(self: object, player_name: str):
-        self.__name = player_name
-        self.__carta_a = Carta()
-        self.__carta_b = Carta()
-        self.__carta_c = Carta()
+        self.__name: Carta = player_name
+        self.__carta_a: Carta = Carta()
+        self.__carta_b: Carta = Carta()
+        self.__carta_c: Carta = Carta()
         self.__available_cards: list = ["A", "B", "C"]
-
-    def available_cards(self: object) -> str:  # verificar se esses tipos estao corretos
-        commands: list = self.__available_cards
-        string: str = ""
-        for n in commands:
-            string += f"{n}, "
-            if n != commands[-1]:
-                string += n + ", "
-            else:
-                string += n
-        return string
 
     def jogar_carta(self, id_carta):
         cartas = {"A": self.__carta_a, "B": self.__carta_b, "C": self.__carta_c}
-        while id_carta.upper not in ("A", "B", "C"):
-            id_carta = input(f"CARta {id_carta.upper} não disponível para uso, escolha outra CARta: ").upper()
+        while id_carta.upper not in self.__available_cards:
+            id_carta = input(f"CARta {id_carta.upper} não disponível para uso, escolha uma CARta entre "
+                             f"as seguintes opções: {self.get_available_cards}: ").upper()
+            print()
         return cartas[id_carta]
-
-    def pedir_truco(self):
-        pass
 
     def mostrar_cartas_disponiveis(self):
         id_carta = {0: "A", 1: "B", 2: "C"}
@@ -129,6 +109,10 @@ class Player:
                     print(id_carta[j], end=", ")
                 else:
                     print(id_carta[j])
+
+    @property
+    def get_available_cards(self):
+        return ', '.join(self.__available_cards)
 
     @property
     def name(self):
@@ -178,9 +162,7 @@ if __name__ == "__main__":
     pessoa = Player("Rodrigo")
     pessoa.mostrar_cartas_disponiveis()
 
-    # Descobrir como receber um número inteiro e não um objeto no número da carta.
-
-    manilha: int = Carta.numero
+    manilha: int = Carta().numero
     print(manilha)
     print(Baralho.baralho)
 

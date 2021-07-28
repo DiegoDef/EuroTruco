@@ -86,7 +86,7 @@ class Player:
     score2 = 0
 
     def __init__(self: object, player_name: str):
-        self.__name: Carta = player_name
+        self.__name: str = player_name
         self.__carta_a: Carta = Carta()
         self.__carta_b: Carta = Carta()
         self.__carta_c: Carta = Carta()
@@ -98,7 +98,10 @@ class Player:
             id_carta = input(f"CARta {id_carta.upper} não disponível para uso, escolha uma CARta entre "
                              f"as seguintes opções: {self.get_available_cards}: ").upper()
             print()
-        return cartas[id_carta]
+        self.__available_cards.remove(id_carta)
+        card: Carta = cartas[id_carta]
+        print(f"Você jogou um {card.numero} de {card.naipe}\n")
+        return card
 
     def mostrar_cartas_disponiveis(self):
         id_carta = {0: "A", 1: "B", 2: "C"}

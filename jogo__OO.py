@@ -26,9 +26,9 @@ def euro_truco() -> None:
         print("Os jogadores 1 e 2 enfrentarão os jogadores 3 e 4.")
         while len(players) < 4:
             players.append(Player(input(f"\nInforme o nome do jogador(a) número {len(players) + 1}: ")))
-        players = players.insert(2, players.pop(1))  # Ajeita na ordem de jogadores utilizado no jogo
-        Player.player1.append(players[:2])
-        Player.player2.append(players[2:])
+        players.insert(2, players.pop(1))  # Ajeita na ordem de jogadores utilizado no jogo
+        Player.player1.extend(players[:2])
+        Player.player2.extend(players[2:])
 
     print("A partida vai começar, peguem suas CARtas e prepare-se para a batalha!")
 
@@ -36,8 +36,10 @@ def euro_truco() -> None:
 
 
 def iniciar_jogo(players: list, prox_jogador: int = 0) -> None:
+    card_force = (4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, "Moles", "Espadas", "Copas", "Paus")
     game_score: tuple = (Player.score1, Player.score2)
     manilha: int = Carta().numero   # manilha do jogo é o número da carta virada + 1
+
     mao_de_11: bool = False  # com a mãe de onze True, as cartas não são mostradas antes de jogar
 
     print("\n<|##################################################################|>\n")
@@ -45,6 +47,9 @@ def iniciar_jogo(players: list, prox_jogador: int = 0) -> None:
     # colocar a parte seguinte em uma função quando terminada
     while True:
         round_score: list = [0, 0]  # ganha quem chegar a 3 primeiro
+        cards: list = [0, 0]
+        playing: object = ""
+        cont_play: int = 0
         cont: int = 0
         jogador_atual: str = ""
         # colocar quem fez a primeira na hora de marcar os pontos.
@@ -55,7 +60,25 @@ def iniciar_jogo(players: list, prox_jogador: int = 0) -> None:
         print(f"\nA carta virada é: {manilha}")
         print("Comandos disponíveis para cada jogador:")
         [print(f"{player.name}: {player.available_cards}") for player in players]
-        print(f"\nA carta virada é: {manilha}")
+        print(f"\nA carta virada é: {manilha}\n")
+        while True:
+            command: str = input(f"É a sua vez {players[cont_play].name}, digite o comando para sua carta: ")
+            if cont_play % 2 == 0:
+                x: Carta = players[cont_play].jogar_carta(command)
+                if card_force.index(x.numero) > cards[0]: # não leva em conta manulha ainda
+                    cards[0] = x
+            else:
+                pass
+
+            cont_play += 1
+
+
+
+
+
+
+        print()
+
 
 
 

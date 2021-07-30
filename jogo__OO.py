@@ -37,6 +37,7 @@ def euro_truco() -> None:
 
 def iniciar_jogo(players: list, prox_jogador: int = 0) -> None:
     card_force = (4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, "Moles", "Espadas", "Copas", "Paus")
+    round_score: list = [0, 0]  # ganha quem chegar a 3 primeiro
     game_score: tuple = (Player.score1, Player.score2)
     manilha: int = Carta().numero   # manilha do jogo é o número da carta virada + 1
 
@@ -46,7 +47,6 @@ def iniciar_jogo(players: list, prox_jogador: int = 0) -> None:
 
     # colocar a parte seguinte em uma função quando terminada
     while True:
-        round_score: list = [0, 0]  # ganha quem chegar a 3 primeiro
         cards: list = [0, 0]
         playing: object = ""
         cont_play: int = 0
@@ -61,28 +61,19 @@ def iniciar_jogo(players: list, prox_jogador: int = 0) -> None:
         print("Comandos disponíveis para cada jogador:")
         [print(f"{player.name}: {player.available_cards}") for player in players]
         print(f"\nA carta virada é: {manilha}\n")
+
         while True:
+            "while sai quanto todos jogarem da rodada de um ponto"
+            index_cards: int = 0 if cont_play in (0, 2) else 1
             command: str = input(f"É a sua vez {players[cont_play].name}, digite o comando para sua carta: ")
-            if cont_play % 2 == 0:
-                x: Carta = players[cont_play].jogar_carta(command)
-                if card_force.index(x.numero) > cards[0]: # não leva em conta manulha ainda
-                    cards[0] = x
-            else:
-                pass
-
+            x: Carta = players[cont_play].jogar_carta(command)
+            if card_force.index(x.numero) > cards[index_cards]:  # não leva em conta manilha ainda
+                cards[index_cards] = x
             cont_play += 1
-
-
-
-
-
+            if cont_play == len(players):
+                break
 
         print()
-
-
-
-
-
 
         cont += 1
 
@@ -104,10 +95,6 @@ def iniciar_jogo(players: list, prox_jogador: int = 0) -> None:
         pass
     else:
         congratulation()
-        answer: str = input('Gostaria de jogar outra partida? ("S" para sim ou "N" para não): ')
-        while answer.upper() not in ("S", "N"):
-            answer = input('Entrada incorreta, por favor digite apenas "S" para sim ou "N" para não: ')
-        print()
         main()
 
 
@@ -123,6 +110,12 @@ def congratulation() -> None:
             print(f"Parabéns {Player.player2[0]} você foi o(a) grande vencedor(a)!!!")
         else:
             print(f"Parabéns {Player.player2[0]} e {Player.player1[1]}, você venceram!")
+
+    answer: str = input('Gostaria de jogar outra partida? ("S" para sim ou "N" para não): ')
+    while answer.upper() not in ("S", "N"):
+        answer = input('Entrada incorreta, por favor digite apenas "S" para sim ou "N" para não: ')
+    print("\n\n")
+    return answer
 
 
 def full_round() -> None:

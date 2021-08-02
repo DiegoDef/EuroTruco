@@ -11,15 +11,15 @@ def euro_truco() -> None:
 
     while quant_j not in (2, 4):
         quant_j = int(input("Bem vindo ao Euro Truco simulator®\n\n"
-                            "A partida poderá ter 2 ou 4 jogadores no total."
+                            "A partida poderá ter 2 ou 4 jogadores no total. "
                             "Antes de começar, informe a quantidade de participantes (2 ou 4): "))
         if quant_j not in (2, 4):
             print("Entrada inválida, a quantidade deve ser de 2 ou 4.\n")
 
     if quant_j == 2:
-        print("Os jogadores 1 e 2 se enfrentarão.")
+        print("\nOs jogadores 1 e 2 se enfrentarão.")
         while len(players) < 2:
-            players.append(Player(input(f"\nInforme o nome do jogador(a) número {len(players) + 1}: ")))
+            players.append(Player(input(f"Informe o nome do jogador(a) número {len(players) + 1}: ")))
         Player.player1.append(players[0])
         Player.player2.append(players[1])
     else:
@@ -37,17 +37,17 @@ def euro_truco() -> None:
 
 def iniciar_jogo(players: list, prox_jogador: int = 0) -> None:
     card_force = (4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, "Moles", "Espadas", "Copas", "Paus")
-    round_score: list = [0, 0]  # ganha quem chegar a 3 primeiro
-    game_score: tuple = (Player.score1, Player.score2)
     manilha: int = Carta().numero   # manilha do jogo é o número da carta virada + 1
+    winning_card: list = [0, 0]
 
     mao_de_11: bool = False  # com a mãe de onze True, as cartas não são mostradas antes de jogar
 
     print("\n<|##################################################################|>\n")
 
     # colocar a parte seguinte em uma função quando terminada
+    print(f"A carta virada é: {manilha}")
     while True:
-        cards: list = [0, 0]
+        round_score: list = [0, 0]  # ganha quem chegar a 3 primeiro
         playing: object = ""
         cont_play: int = 0
         cont: int = 0
@@ -56,28 +56,28 @@ def iniciar_jogo(players: list, prox_jogador: int = 0) -> None:
         print(f"\nPontuação da rodada: Time 1 {round_score[0]} x "
               f"{round_score[1]} Time 2")
         print("Comandos disponíveis para cada jogador:")
-        mostrar_cartas_disponiveis()
-        print(f"\nA carta virada é: {manilha}")
-        print("Comandos disponíveis para cada jogador:")
-        [print(f"{player.name}: {player.available_cards}") for player in players]
-        print(f"\nA carta virada é: {manilha}\n")
+        #  cont_play
 
-        while True:
-            "while sai quanto todos jogarem da rodada de um ponto"
-            index_cards: int = 0 if cont_play in (0, 2) else 1
-            command: str = input(f"É a sua vez {players[cont_play].name}, digite o comando para sua carta: ")
-            x: Carta = players[cont_play].jogar_carta(command)
-            if card_force.index(x.numero) > cards[index_cards]:  # não leva em conta manilha ainda
-                cards[index_cards] = x
-            cont_play += 1
-            if cont_play == len(players):
-                break
+        "while sai quanto todos jogarem da rodada de um ponto"
+        index_card: int = 0 if cont_play in (0, 2) else 1
+        command: str = input(f"É a sua vez {players[cont_play].name}, "
+                             f"seus comandos disponíveis são: {players[cont_play].available_cards}.\n"
+                             f"Insira o comando da carta que você quer jogar: ")
+        x: Carta = players[cont_play].throw_card(command)
+        if card_force.index(x.numero) > winning_card[index_card]:  # não leva em conta manilha ainda
+            winning_card[index_card] = x
+        cont_play += 1
+
+        if winning_card[0] > winning_card[1]:
+            round_score[0] += 1
+        elif winning_card[1] > winning_card[0]:
+            round_score[1] += 1
 
         print()
 
         cont += 1
 
-        if max(round_score) == 2:  # mudar condição mais tarde
+        if max(round_score) == 2:
 
             break
     reset_baralho()
@@ -85,20 +85,20 @@ def iniciar_jogo(players: list, prox_jogador: int = 0) -> None:
     print("\n<|##################################################################|>\n")
 
     print(f"\nPontuação da partida: Time 1 {Player.score1} x "
-          f"{game_score[1]} Time 2")
+          f"{Player.score2} Time 2")
 
-    if max(game_score) < 12:
-        if game_score[0] == 11 and game_score[1] == 11:
+    if max(Player.score1, Player.score2) < 12:
+        if Player.score1 == 11 and Player.score2 == 11:
             mao_de_11 = True
         else:
             iniciar_jogo(players, prox_jogador)
         pass
     else:
-        congratulation()
-        main()
+        if congratulation() == "S":
+            main()
 
 
-def congratulation() -> None:
+def congratulation() -> str:
     n_players: int = len(Player.player1)
     if Player.score1 >= 12:
         if n_players == 2:
@@ -115,11 +115,16 @@ def congratulation() -> None:
     while answer.upper() not in ("S", "N"):
         answer = input('Entrada incorreta, por favor digite apenas "S" para sim ou "N" para não: ')
     print("\n\n")
+
     return answer
 
 
 def full_round() -> None:
     """Termina quando alguém chega a 2 pontos sem empate."""
+    pass
+
+
+def throw_cards_complete():
     pass
 
 
@@ -148,8 +153,8 @@ def verificar_quem_venceu():
 def verifica_regras():
     pass
 
-
-def mostrar_cartas_disponiveis():
-    pass
-
 # passar algums fuções para cá, como a de criação de baralho.
+
+
+if __name__ == "__main__":
+    main()

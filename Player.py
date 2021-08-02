@@ -92,11 +92,11 @@ class Player:
         self.__carta_c: Carta = Carta()
         self.__available_cards: list = ["A", "B", "C"]
 
-    def jogar_carta(self, id_carta):
+    def throw_card(self, id_carta):
         cartas = {"A": self.__carta_a, "B": self.__carta_b, "C": self.__carta_c}
         while id_carta.upper not in self.__available_cards:
             id_carta = input(f"CARta {id_carta.upper} não disponível para uso, escolha uma CARta entre "
-                             f"as seguintes opções: {self.get_available_cards}: ").upper()
+                             f"as seguintes opções: {self.available_cards}: ").upper()
             print()
         self.__available_cards.remove(id_carta)
         card: Carta = cartas[id_carta]
@@ -114,7 +114,7 @@ class Player:
                     print(id_carta[j])
 
     @property
-    def get_available_cards(self):
+    def available_cards(self):
         return ', '.join(self.__available_cards)
 
     @property
@@ -146,7 +146,7 @@ class Player:
         self.__carta_b = value
 
     def __str__(self):
-        return f"Nome: {self.__nome}\nCARtas: {self.carta_a.numero} de {self.carta_a.naipe}, " \
+        return f"Nome: {self.__name}\nCARtas: {self.carta_a.numero} de {self.carta_a.naipe}, " \
                f"{self.carta_b.numero} de {self.carta_b.naipe} e {self.carta_c.numero} de {self.carta_c.naipe}"
 
     """def gravar_cartas(self):
@@ -163,11 +163,11 @@ class Player:
 
 if __name__ == "__main__":
     pessoa = Player("Rodrigo")
-    pessoa.mostrar_cartas_disponiveis()
+    print(pessoa.available_cards)\
 
     manilha: int = Carta().numero
-    print(manilha)
-    print(Baralho.baralho)
+    #print(manilha)
+    #print(Baralho.baralho)
 
 
 """pessoa = Player("Rodrigo")

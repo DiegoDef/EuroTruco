@@ -37,57 +37,16 @@ def euro_truco() -> None:
     iniciar_jogo(players)  # termina quando alguém chegar a 12 pontos
 
 
-def iniciar_jogo(players: list, prox_jogador: int = 0) -> None:
-    card_force = (4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, "Moles", "Espadas", "Copas", "Paus")
-    manilha: int = Carta().numero   # manilha do jogo é o número da carta virada + 1
-
-    cont_play: int = 0
+def iniciar_jogo(players: list, cont_play: int = 0) -> None:
+    manilha: int = Carta().numero  # manilha do jogo é o número da carta virada + 1
 
     mao_de_11: bool = False  # com a mãe de onze True, as cartas não são mostradas antes de jogar
 
     print("\n<|##################################################################|>\n")
 
-    # colocar a parte seguinte em uma função quando terminada
     print(f"A carta virada é: {manilha}")
-    while True:  # fazer função recursiva
-        winning_card: list = [0, 0]
-        round_score: list = [0, 0]  # ganha quem chegar a 3 primeiro
-        playing: object = ""
-        cont: int = 0
-        jogador_atual: str = ""
-        # colocar quem fez a primeira na hora de marcar os pontos.
-        # print(f"\nPontuação da rodada: Time 1 {round_score[0]} x "
-        #      f"{round_score[1]} Time 2")
-        # print("Comandos disponíveis para cada jogador:")
-        #  cont_play
 
-        # "while sai quanto todos jogarem da rodada de um ponto"
-        index_card: int = 0 if cont_play in (0, 2) else 1
-        print(cont_play)
-        command: str = input(f"É a sua vez {players[cont_play].name}, "
-                             f"seus comandos disponíveis são: {players[cont_play].available_cards}.\n"
-                             f"Insira o comando da carta que você quer jogar: ")
-        x: Carta = players[cont_play].throw_card(command)
-        force = card_force.index(x.numero)
-        if force > winning_card[index_card]:  # não leva em conta manilha ainda
-            winning_card[index_card] = force
-
-        if winning_card[0] > winning_card[1]:
-            round_score[0] += 1
-        elif winning_card[1] > winning_card[0]:
-            round_score[1] += 1
-
-        print(round_score)
-
-        print()
-
-        cont_play += 1
-        if cont_play == len(players):
-            cont_play = 0
-
-        if max(round_score) == 2:
-
-            break
+    full_round(players, cont_play)
     reset_baralho()
 
     print("\n<|##################################################################|>\n")
@@ -99,11 +58,64 @@ def iniciar_jogo(players: list, prox_jogador: int = 0) -> None:
         if Player.score1 == 11 and Player.score2 == 11:
             mao_de_11 = True
         else:
-            iniciar_jogo(players, prox_jogador)
+            iniciar_jogo(players, cont_play)
         pass
     else:
         if congratulation() == "S":
             main()
+
+
+def full_round(players: list, cont_play: int, cont=0, winning_card: None = None, round_score: None = None) -> tuple:
+    """Termina quando alguém chega a 2 pontos sem empate."""
+    if cont == 0:
+        winning_card: list = [0, 0]
+        round_score: list = [0, 0]  # ganha quem chegar a 3 pontos primeiro
+
+    # "while sai quanto todos jogarem da rodada de um ponto"
+    index_card: int = 0 if cont_play in (0, 2) else 1
+    print(cont_play)  # debug
+    command: str = input(f"É a sua vez {players[cont_play].name}, "
+                         f"seus comandos disponíveis são: {players[cont_play].available_cards}.\n"
+                         f"Insira o comando da carta que você quer jogar: ")
+    x: Carta = players[cont_play].throw_card(command)
+    force = Carta.card_force.index(x.numero)
+    if force > winning_card[index_card]:  # não leva em conta manilha ainda
+        winning_card[index_card] = force
+
+    if cont % 2 == 1:
+        round_score = round_winner(winning_card, round_score)
+
+    print(round_score) # debug
+
+    print()
+
+    cont_play += 1
+    cont += 1
+
+    if max(round_score) >= 2:  # sem truco ainda
+        if round_score[0] >= 2:
+            Player.score1 += 1
+        else:
+            Player.score2 += 1
+        return cont_play
+
+    if cont_play == len(players):
+        cont_play = 0
+    full_round(players, cont_play, cont, winning_card, round_score)
+
+
+def round_winner(winning_card: list, round_score: list) -> list:
+    if winning_card[0] > winning_card[1]:
+        round_score[0] += 1
+        x: int = len(Player.player1)
+        name: str = Player.player1[0] if x == 1 else " e ".join(Player.player1)
+        print(f"{name} ganh{'ou' if x == 1 else 'aram'} 1 ponto")
+    elif winning_card[1] > winning_card[0]:
+        round_score[1] += 1
+        x: int = len(Player.player2)
+        name: str = Player.player2[0] if len(Player.player2) == 1 else " e ".join(Player.player2)
+        print(f"{name} ganh{'ou' if x == 1 else 'aram'} 1 ponto!\n")
+    return round_score
 
 
 def congratulation() -> str:
@@ -127,11 +139,6 @@ def congratulation() -> str:
     return answer
 
 
-def full_round() -> None:
-    """Termina quando alguém chega a 2 pontos sem empate."""
-    pass
-
-
 def throw_cards_complete():
     pass
 
@@ -149,9 +156,9 @@ def draw(scores: list) -> list:
 
 def reset_baralho() -> None:
     Carta.baralho = [{}.fromkeys(range(1, 13), "moles"),
-                       {}.fromkeys(range(1, 13), "espadas"),
-                       {}.fromkeys(range(1, 13), "copas"),
-                       {}.fromkeys(range(1, 13), "paus")]
+                     {}.fromkeys(range(1, 13), "espadas"),
+                     {}.fromkeys(range(1, 13), "copas"),
+                     {}.fromkeys(range(1, 13), "paus")]
 
 
 def verificar_quem_venceu():
@@ -160,6 +167,7 @@ def verificar_quem_venceu():
 
 def verifica_regras():
     pass
+
 
 # passar algums fuções para cá, como a de criação de baralho.
 

@@ -3,6 +3,7 @@ class Carta:
                      {}.fromkeys(range(1, 13), "espadas"),
                      {}.fromkeys(range(1, 13), "copas"),
                      {}.fromkeys(range(1, 13), "paus")]
+    card_force = (4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, "Moles", "Espadas", "Copas", "Paus")
     remove: tuple = (8, 9)
 
     def __init__(self):

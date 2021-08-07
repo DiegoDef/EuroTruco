@@ -134,7 +134,7 @@ def round_winner(winning_card: list, round_score: list) -> tuple:
     return winning_card, round_score
 
 
-def draw(scores: list) -> list:  # draw completo sem testes profundos
+def draw(scores: list) -> list:  # draw completo sem testes profundos e truco
     if sum(scores) == 0:
         print("Deu empate! Quem ganhar a próxima será o vencedor.\n")
         return [1, 1]

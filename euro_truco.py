@@ -12,14 +12,15 @@ def euro_truco() -> None:
     print("============= Seja bem vindo ao =============\n"
           "=========== Euro Truco simulator® ===========\n\n")
 
-    while quant_j not in (2, 4):
+    """while quant_j not in (2, 4):
         quant_j = int(input("A partida poderá ter 2 ou 4 jogadores no total. "
                             "Antes de começar, informe a quantidade de participantes (2 ou 4): "))
         if quant_j not in (2, 4):
             print("Entrada inválida, a quantidade deve ser de 2 ou 4.\n")
-
+"""
+    quant_j = 2
     if quant_j == 2:
-        print("\nOs jogadores 1 e 2 se enfrentarão.")
+        """print("\nOs jogadores 1 e 2 se enfrentarão.")"""
         while len(players) < 2:
             players.append(Player(input(f"Informe o nome do jogador(a) número {len(players) + 1}: ")))
     else:
@@ -41,7 +42,7 @@ def iniciar_jogo(players: list) -> None:
 
     print("\n<|##################################################################|>\n")
 
-    print(f"A carta virada é o: {manilha}")
+    print(f"\nA carta virada é: {manilha}\n")
 
     full_round(players)
     reset_baralho_and_cards(players)
@@ -62,61 +63,112 @@ def iniciar_jogo(players: list) -> None:
             main()
 
 
-def full_round(players: list, cont=0, winning_card=0, round_score=0) -> int:
-    """Termina quando alguém chega a 2 pontos sem empate."""
-    if cont == 0:
+def full_round(players: list, count: int = 0, winning_card: int = 0, round_score: int = 0, next_player: int = 0):
+    """Termina quando alguém chega a 2 pontos"""
+    count_play = Player.count_play
+    if count == 0:
         winning_card: list = [0, 0]
         round_score: list = [0, 0]  # ganha quem chegar a 3 pontos primeiro
-
-    cont_play = Player.cont_play
+        next_player: list = [[0, 0], [0, 0]]
 
     # "while sai quanto todos jogarem da rodada de um ponto"
-    index_card: int = 0 if cont_play in (0, 2) else 1
-    # print(cont_play)  # debug
+
+    # print(count_play)  # debug
     # print(players)
-    command: str = input(f"É a sua vez {players[cont_play].name}, "
-                         f"seus comandos disponíveis são: {players[cont_play].available_cards}.\n"
+    command: str = input(f"É a sua vez {players[count_play].name}, "
+                         f"seus comandos disponíveis são: {players[count_play].available_cards}.\n"
                          f"Insira o comando da carta que você quer jogar: ")
-    x: Carta = players[cont_play].throw_card(command)
-    force = Carta.card_force.index(x.numero)
+    x: Carta = players[count_play].throw_card(command)
+    index_card: int = 0 if count_play in (0, 2) else 1
+    force: int = Carta.card_force.index(x.numero)
     if force > winning_card[index_card]:  # não leva em conta manilha ainda
         winning_card[index_card] = force
+        next_player[index_card] = [count_play, count]  # index do 1º player da proxima rodada
+        if count == 1:
+            Player.first_score = winning_card
 
-    if cont % 2 == 1:
-        round_score = round_winner(winning_card, round_score)
+    print(winning_card, round_score, next_player)
+    if count % 2 == 1 and len(players) == 2:
+        winning_card, round_score = round_winner(winning_card, round_score)
+    elif count % 4 == 1 and len(players) == 4:
+        winning_card, round_score = round_winner(winning_card, round_score)
 
-    # print(round_score)  # debug
+    print(round_score)  # debug
 
     print()
 
-    cont_play += 1
-    cont += 1
+    count_play += 1
+    count += 1
 
-    if cont_play == len(players):
-        cont_play = 0
+    if count_play == len(players):
+        count_play = 0
 
     if max(round_score) >= 2:  # sem truco ainda
         if round_score[0] >= 2:
             Player.score1 += 1
         else:
             Player.score2 += 1
-        return cont_play
-    Player.cont_play = cont_play
-    full_round(players, cont, winning_card, round_score)
+        Player.count_play = next_player_index(next_player, round_score)
+    else:
+        Player.count_play = count_play
+        full_round(players, count, winning_card, round_score, next_player)
 
 
-def round_winner(winning_card: list, round_score: list) -> list:
+def round_winner(winning_card: list, round_score: list) -> tuple:
+    if sum(round_score) == 0:
+        Player.first_score = round_score
     if winning_card[0] > winning_card[1]:
         round_score[0] += 1
         x: int = len(Player.players)
-        name: str = Player.players[0] if x == 2 else " e ".join(Player.players)
+        name: str = Player.players[0] if x == 2 else " e ".join(Player.players[:2])
         print(f"{name} ganh{'ou' if x == 2 else 'aram'} 1 ponto")
     elif winning_card[1] > winning_card[0]:
         round_score[1] += 1
         x: int = len(Player.players)
-        name: str = Player.players[1] if x == 2 else " e ".join(Player.players)
+        name: str = Player.players[1] if x == 2 else " e ".join(Player.players[2:])
         print(f"{name} ganh{'ou' if x == 2 else 'aram'} 1 ponto!\n")
-    return round_score
+    else:
+        print("empate")  # debug
+        round_score = draw(round_score)
+    winning_card = [0, 0]
+    return winning_card, round_score
+
+
+def draw(scores: list) -> list:  # draw completo sem testes profundos
+    if sum(scores) == 0:
+        print("Deu empate! Quem ganhar a próxima será o vencedor.\n")
+        return [1, 1]
+    elif scores[0] == 1 and scores[1] == 0:
+        return [2, scores[1]]
+    elif scores[1] == 1 and scores[0] == 0:
+        return [scores[0], 2]
+    else:
+        n = Player.first_score
+        if n[0] == n[1]:
+            print("Deu empate! Quem ganhar a próxima será o vencedor.\n")
+            return [1, 1]
+        else:
+            if n[0] > n[1]:
+                scores[0] += 1
+                x: int = len(Player.players)
+                name: str = Player.players[0] if x == 2 else " e ".join(Player.players[:2])
+                print(f"{name} ganh{'ou' if x == 2 else 'aram'} 1 ponto")
+                return scores
+            scores[1] += 1
+            x: int = len(Player.players)
+            name: str = Player.players[1] if x == 2 else " e ".join(Player.players[2:])
+            print(f"{name} ganh{'ou' if x == 2 else 'aram'} 1 ponto!\n")
+            return scores
+
+
+def next_player_index(next_player: list, round_score) -> list:
+    if round_score[0] > round_score[1]:
+        return next_player[0][0]
+    elif round_score[1] > round_score[0]:
+        return next_player[1][0]
+    next1 = next_player[0][0]
+    next2 = next_player[1][0]
+    return next1 if next_player[0][1] > next_player[1][1] else next2
 
 
 def congratulation() -> str:
@@ -136,17 +188,6 @@ def congratulation() -> str:
     return answer
 
 
-def draw(scores: list) -> list:
-    if sum(scores) == 0:
-        return [1, 1]
-    elif scores[0] == 1:
-        return [2, scores[1]]
-    elif scores[1] == 1:
-        return [scores[0], 2]
-    else:
-        return [1, 1]
-
-
 def reset_baralho_and_cards(players) -> None:
     Carta.baralho = [{}.fromkeys(range(1, 13), "moles"),
                      {}.fromkeys(range(1, 13), "espadas"),
@@ -157,6 +198,9 @@ def reset_baralho_and_cards(players) -> None:
         player.carta_b = Carta()
         player.carta_c = Carta()
         player.available_cards = ["A", "B", "C"]
+        with open("cartas.txt", 'a') as c:
+            c.write(player.__str__())
+        print(player)
 
 
 def verificar_quem_venceu():

@@ -1,17 +1,18 @@
-import carta
+from carta import Carta
 
 
 class Player:
     players = []
     score1 = 0  # pontuacao do jogo time 1 e 2, ganha quem chegar a 12
     score2 = 0
-    cont_play = 0  # index do próximo jogador
+    count_play = 0  # index do próximo jogador
+    first_score = []
 
     def __init__(self: object, player_name: str):
         self.__name: str = player_name
-        self.__carta_a: carta.Carta = carta.Carta()
-        self.__carta_b: carta.Carta = carta.Carta()
-        self.__carta_c: carta.Carta = carta.Carta()
+        self.__carta_a: Carta = Carta()
+        self.__carta_b: Carta = Carta()
+        self.__carta_c: Carta = Carta()
         self.__available_cards: list = ["A", "B", "C"]
         Player.players.append(player_name)
 
@@ -24,8 +25,8 @@ class Player:
                              f"as seguintes opções: {', '.join(self.__available_cards)}: ").upper()
             print()
         self.__available_cards.remove(id_carta)
-        card: carta.Carta = cartas[id_carta]
-        print(f"Você jogou um {card.numero} de {card.naipe}\n")
+        card: Carta = cartas[id_carta]
+        print(f"Você jogou a CARta {card.numero} de {card.naipe}\n")
         return card
 
     @property
@@ -84,7 +85,7 @@ if __name__ == "__main__":
     pessoa = Player("Rodrigo")
     print(pessoa.available_cards)
     Player.player1 = "Alan"
-    manilha: int = carta.Carta().numero
+    manilha: int = Carta().numero
     print(Player.player1)
     # print(manilha)
     # print(Baralho.baralho)

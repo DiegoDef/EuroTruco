@@ -2,10 +2,10 @@ import carta
 
 
 class Player:
-    player1 = []  # time 1 no jogo, pode conter 1 ou 2 jogadores
-    player2 = []
+    players = []
     score1 = 0  # pontuacao do jogo time 1 e 2, ganha quem chegar a 12
     score2 = 0
+    cont_play = 0  # index do próximo jogador
 
     def __init__(self: object, player_name: str):
         self.__name: str = player_name
@@ -13,18 +13,19 @@ class Player:
         self.__carta_b: carta.Carta = carta.Carta()
         self.__carta_c: carta.Carta = carta.Carta()
         self.__available_cards: list = ["A", "B", "C"]
+        Player.players.append(player_name)
 
-    def throw_card(self: object, id_carta):
+    def throw_card(self, id_carta):
         cartas = {"A": self.__carta_a, "B": self.__carta_b, "C": self.__carta_c}
         id_carta = id_carta.upper()
 
         while id_carta not in self.__available_cards:
-            id_carta = input(f"CARta {id_carta.upper} não disponível para uso, escolha uma CARta entre "
-                             f"as seguintes opções: {self.__available_cards}: ").upper()
+            id_carta = input(f"CARta {id_carta} não disponível para uso, escolha uma CARta entre "
+                             f"as seguintes opções: {', '.join(self.__available_cards)}: ").upper()
             print()
         self.__available_cards.remove(id_carta)
         card: carta.Carta = cartas[id_carta]
-        print(f"Você jogou um {card.numero} de {card.naipe}")
+        print(f"Você jogou um {card.numero} de {card.naipe}\n")
         return card
 
     @property
@@ -46,6 +47,10 @@ class Player:
     @property
     def carta_c(self):
         return self.__carta_c
+
+    @available_cards.setter
+    def available_cards(self, value: list):
+        self.__available_cards = value
 
     @carta_a.setter
     def carta_a(self, value):
@@ -77,9 +82,10 @@ class Player:
 
 if __name__ == "__main__":
     pessoa = Player("Rodrigo")
-    print(pessoa.available_cards)\
-
+    print(pessoa.available_cards)
+    Player.player1 = "Alan"
     manilha: int = carta.Carta().numero
+    print(Player.player1)
     # print(manilha)
     # print(Baralho.baralho)
 

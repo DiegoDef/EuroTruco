@@ -13,33 +13,25 @@ class Carta:
 
     def get_card(self) -> dict:
         """Retornar uma carta para o jogador garantindo a aleatoriedade"""
+        def random_number(num) -> int:
+            import random
+            numbers = []
+            for i in range(30):
+                numbers.append(random.randint(0, num))
+            return numbers[random.randint(0, len(numbers)-1)]
         from random import randint, choice, shuffle
         carta: dict = {}
-        #  if len(self.baralho) == 0:  não deve precisar, retirar no futuro
-        #  self.baralho()
-        # refazer aleatoriedade das cartas
         while carta == {}:
-            numero: int = self.remove[0]
-            naipe = 0
-            while numero in self.remove:
-                list1 = []
-                list2 = []
-                for _ in range(24):
-                    list1.append(randint(0, 3))
-                    num_random = randint(1, 12)
-                    while num_random in self.remove:
-                        num_random = randint(1, 12)
-                    list2.append(num_random)
-                shuffle(list1)
-                shuffle(list2)
-                naipe = choice(list1)
-                numero = choice(list2)
-                # print("naipe", naipe, "numero", numero)
+            naipe = random_number(3)
+            numero = random_number(9)
+            # print("naipe", naipe, "numero", numero)
             if self.baralho[naipe][numero] != 0:
                 carta = {list(self.baralho[naipe].keys())[numero - 1]: self.baralho[naipe][numero]}
                 # cartas.append(carta)
                 self.baralho[naipe][numero] = 0  # 0 para indicar que a carta foi usada
         return carta
+
+
 
     @property
     def numero(self):

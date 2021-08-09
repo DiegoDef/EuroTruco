@@ -189,10 +189,11 @@ def congratulation() -> str:
 
 
 def reset_baralho_and_cards(players) -> None:
-    Carta.baralho = [{}.fromkeys(range(1, 13), "moles"),
-                     {}.fromkeys(range(1, 13), "espadas"),
-                     {}.fromkeys(range(1, 13), "copas"),
-                     {}.fromkeys(range(1, 13), "paus")]
+    truco_numbers = list(range(1, 8)) + list(range(10, 13))
+    Carta.baralho = [{}.fromkeys(truco_numbers, "moles"),
+                     {}.fromkeys(truco_numbers, "espadas"),
+                     {}.fromkeys(truco_numbers, "copas"),
+                     {}.fromkeys(truco_numbers, "paus")]
     for player in players:
         player.carta_a = Carta()
         player.carta_b = Carta()

@@ -43,7 +43,8 @@ def iniciar_jogo(players: list) -> None:
     print("\n<|##################################################################|>\n")
 
     print(f"\nA carta virada é: {manilha}\n")
-
+    for p in players:
+        p.write_cards()
     full_round(players)
     reset_baralho_and_cards(players)
 

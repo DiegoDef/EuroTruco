@@ -16,12 +16,8 @@ class Player:
         self.__available_cards: list = ["A", "B", "C"]
         Player.players.append(player_name)
 
-    def write_cards(self):
-        with open(f"cartas/{self.__name}.txt", "w") as p:
-            p.write(f"Olá {self.__name}! Suas cartas estão logo abaixo. Boa sorte!\n\n"
-                         f"A: {self.__carta_a.numero} de {self.__carta_a.naipe}\n"
-                         f"B: {self.__carta_b.numero} de {self.__carta_b.naipe}\n"
-                         f"C: {self.__carta_c.numero} de {self.__carta_c.naipe}\n")
+
+
 
     def throw_card(self, id_carta):
         cartas = {"A": self.__carta_a, "B": self.__carta_b, "C": self.__carta_c}

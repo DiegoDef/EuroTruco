@@ -3,6 +3,13 @@ from carta import Carta
 
 
 def main() -> None:
+    import platform
+
+    os = platform.system()
+    if os not in ("Linux", "Windows"):
+        print("\nO Euro truco não é compatível com o seu sistema operacional.")
+        exit()
+
     euro_truco()
 
 
@@ -29,9 +36,9 @@ def euro_truco() -> None:
             players.append(Player(input(f"\nInforme o nome do jogador(a) número {len(players) + 1}: ")))
         players.insert(2, players.pop(1))  # Ajeita na ordem de jogadores utilizado no jogo
         print()
+    write_cards(players)
 
     print("A partida vai começar, peguem suas CARtas e prepare-se para a batalha!")
-
     iniciar_jogo(players)  # termina quando alguém chegar a 12 pontos
 
 
@@ -43,8 +50,6 @@ def iniciar_jogo(players: list) -> None:
     print("\n<|##################################################################|>\n")
 
     print(f"\nA carta virada é: {manilha}\n")
-    for p in players:
-        p.write_cards()
     full_round(players)
     reset_baralho_and_cards(players)
 
@@ -200,9 +205,27 @@ def reset_baralho_and_cards(players) -> None:
         player.carta_b = Carta()
         player.carta_c = Carta()
         player.available_cards = ["A", "B", "C"]
-        with open("cartas.txt", 'a') as c:
-            c.write(player.__str__())
-        print(player)
+    write_cards(players)
+
+
+def write_cards(players):
+    import platform
+
+    path = ""
+    os = platform.system()
+    if os == "Linux":
+        path = "cartas/"
+    else:
+        path = "cartas\\"
+
+    for player in players:
+        with open(path + f"{player.name}.txt", "w") as p:
+            p.write(f"Olá {player.name}! Suas cartas estão logo abaixo. Boa sorte!\n\n"
+                    f"A: {player.carta_a.numero} de {player.carta_a.naipe}\n"
+                    f"B: {player.carta_b.numero} de {player.carta_b.naipe}\n"
+                    f"C: {player.carta_c.numero} de {player.carta_c.naipe}\n")
+        print(player)  # debug
+
 
 
 def verificar_quem_venceu():

@@ -25,7 +25,7 @@ def euro_truco() -> None:
         if quant_j not in (2, 4):
             print("Entrada inválida, a quantidade deve ser de 2 ou 4.\n")
 """
-    quant_j = 2
+    quant_j = 2  # remover mais tarde
     if quant_j == 2:
         """print("\nOs jogadores 1 e 2 se enfrentarão.")"""
         while len(players) < 2:
@@ -38,39 +38,37 @@ def euro_truco() -> None:
         print()
     write_cards(players)
 
-    print("A partida vai começar, peguem suas CARtas e prepare-se para a batalha!")
-    iniciar_jogo(players)  # termina quando alguém chegar a 12 pontos
+    print("\nA partida vai começar, peguem suas CARtas e prepare-se para a batalha!")
+    start_round(players)  # termina quando alguém chegar a 12 pontos
 
 
-def iniciar_jogo(players: list) -> None:
+def start_round(players: list) -> None:
     manilha: int = Carta().numero  # manilha do jogo é o número da carta virada + 1
 
     mao_de_11: bool = False  # com a mãe de onze True, as cartas não são mostradas antes de jogar
 
-    print("\n<|##################################################################|>\n")
+    print("\n|##################################################################|>\n")
 
-    print(f"\nA carta virada é: {manilha}\n")
-    full_round(players)
+    print(f"A carta virada é: {manilha}\n")
+    full_round_up_to_2_points(players)
     reset_baralho_and_cards(players)
 
-    print("\n<|##################################################################|>\n")
-
-    print(f"\nPontuação da partida: Time_1 {Player.score1} x "
+    print(f"\nPontuação total da partida: Time_1 {Player.score1} x "
           f"{Player.score2} Time_2\n")
 
     if max(Player.score1, Player.score2) < 12:
         if Player.score1 == 11 and Player.score2 == 11:
             mao_de_11 = True
         else:
-            iniciar_jogo(players)
-        pass
+            start_round(players)
     else:
         if congratulation() == "S":
             main()
 
 
-def full_round(players: list, count: int = 0, winning_card: int = 0, round_score: int = 0, next_player: int = 0):
-    """Termina quando alguém chega a 2 pontos"""
+def full_round_up_to_2_points(players: list, count: int = 0, winning_card: int = 0,
+                              round_score: int = 0, next_player: int = 0):
+    """Termina quando alguém chega a 2 pontos ou mais quando em truco"""
     count_play = Player.count_play
     if count == 0:
         winning_card: list = [0, 0]
@@ -117,7 +115,7 @@ def full_round(players: list, count: int = 0, winning_card: int = 0, round_score
         Player.count_play = next_player_index(next_player, round_score)
     else:
         Player.count_play = count_play
-        full_round(players, count, winning_card, round_score, next_player)
+        full_round_up_to_2_points(players, count, winning_card, round_score, next_player)
 
 
 def round_winner(winning_card: list, round_score: list) -> tuple:
@@ -178,6 +176,8 @@ def next_player_index(next_player: list, round_score) -> list:
 
 
 def congratulation() -> str:
+    print("\n<|##################################################################|>\n")
+
     if len(Player.players) == 2:
         p1 = Player.players[0] if Player.score1 >= 12 else Player.players[1]
         print(f"Parabéns {p1} você foi o(a) grande vencedor(a)!!!")
@@ -211,12 +211,12 @@ def reset_baralho_and_cards(players) -> None:
 def write_cards(players):
     import platform
 
-    path = ""
     os = platform.system()
     if os == "Linux":
         path = "cartas/"
     else:
         path = "cartas\\"
+    print(path)
 
     for player in players:
         with open(path + f"{player.name}.txt", "w") as p:
@@ -225,7 +225,6 @@ def write_cards(players):
                     f"B: {player.carta_b.numero} de {player.carta_b.naipe}\n"
                     f"C: {player.carta_c.numero} de {player.carta_c.naipe}\n")
         print(player)  # debug
-
 
 
 def verificar_quem_venceu():

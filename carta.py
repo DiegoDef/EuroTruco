@@ -50,14 +50,16 @@ class Carta:
         """Retorna o numero e naipe da carta"""
         return f"Número: {self.__numero}\nNaipe: {self.__naipe}"
 
-    def set_numero(self, numero):
+    @numero.setter
+    def numero(self, numero):
         """Muda o numero da carta para fins de testes"""
         if numero in range(13) and numero not in self.remove:
             self.__numero = numero
         else:
             print("Entrada não disponível para servir como número da carta, tente novamente.")
 
-    def set_naipe(self, naipe):
+    @naipe.setter
+    def naipe(self, naipe):
         """Muda o naipe da carta para fins de testes"""
         if naipe in ("moles", "espadas", "copas", "paus"):
             self.__naipe = naipe

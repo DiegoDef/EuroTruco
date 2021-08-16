@@ -23,10 +23,9 @@ def euro_truco() -> None:
                             "Antes de começar, informe a quantidade de participantes (2 ou 4): "))
         if quant_j not in (2, 4):
             print("Entrada inválida, a quantidade deve ser de 2 ou 4.\n")
-"""
-    quant_j = 2  # remover mais tarde
-    if quant_j == 2:
-        """print("\nOs jogadores 1 e 2 se enfrentarão.")"""
+        
+        if quant_j == 2:
+        print("\nOs jogadores 1 e 2 se enfrentarão.")
         while len(players) < 2:
             players.append(Player(input(f"Informe o nome do jogador(a) número {len(players) + 1}: ")))
     else:
@@ -34,11 +33,31 @@ def euro_truco() -> None:
         while len(players) < 4:
             players.append(Player(input(f"\nInforme o nome do jogador(a) número {len(players) + 1}: ")))
         players.insert(2, players.pop(1))  # Ajeita na ordem de jogadores utilizado no jogo
-        print()
+        print()   
+"""
+
+    #  inicio de ações para desenvolvedor
+    print("Informe o nome do jogador(a) número 1: Diego\n"
+          "Informe o nome do jogador(a) número 2: Michele")
+    players.append(Player("Diego"))
+    players.append(Player("michele"))
+    if input().upper() == 'Q':
+        print("Apenas números:")
+        for p in players:
+            developer(p, (input("Carta 1: "), input("Carta 2: "), input("Carta 3: ")))
+
+    #  final
     write_cards(players)
 
     print("\nA partida vai começar, peguem suas CARtas e prepare-se para a batalha!")
     start_round(players)  # termina quando alguém chegar a 12 pontos
+
+
+def developer(player, *args):
+    player.carta_a.numero = 1
+    player.carta_b.numero = 2
+    player.carta_c.numero = 3
+
 
 
 def start_round(players: list) -> None:

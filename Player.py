@@ -5,8 +5,11 @@ class Player:
     players = []
     score1 = 0  # pontuacao do jogo time 1 e 2, ganha quem chegar a 12
     score2 = 0
-    count_play = 0  # index do próximo jogador
-    first_score = []
+    count_play_start = 0  # index do próximo jogador no inicio da rodada
+    count_play_round = 0  # index do próximo jogador ao decorrer da rodada
+
+    first_score = [0, 0]
+    manilha: Carta = Carta()
 
     def __init__(self: object, player_name: str):
         self.__name: str = player_name
@@ -15,9 +18,6 @@ class Player:
         self.__carta_c: Carta = Carta()
         self.__available_cards: list = ["A", "B", "C"]
         Player.players.append(player_name)
-
-
-
 
     def throw_card(self, id_carta):
         cartas = {"A": self.__carta_a, "B": self.__carta_b, "C": self.__carta_c}
@@ -66,40 +66,20 @@ class Player:
 
     @carta_c.setter
     def carta_c(self, value):
-        self.__carta_b = value
+        self.__carta_c = value
 
     def __str__(self):
         return f"Nome: {self.__name}\nCARtas: {self.carta_a.numero} de {self.carta_a.naipe}, " \
                f"{self.carta_b.numero} de {self.carta_b.naipe} e {self.carta_c.numero} de {self.carta_c.naipe}"
-
-    """def gravar_cartas(self):
-        if len(nomes_jogadores) == 2:
-            j1_c = {"A": (list(c[0][0])[0], list(c[0][0].values())[0].title()),
-                    "B": (list(c[0][1])[0], list(c[0][1].values())[0].title()),
-                    "C": (list(c[0][2])[0], list(c[0][2].values())[0].title())}
-            print(j1_c)
-            j2_c = {"A": (list(c[1][0])[0], list(c[1][0].values())[0].title()),
-                    "B": (list(c[1][1])[0], list(c[1][1].values())[0].title()),
-                    "C": (list(c[1][2])[0], list(c[1][2].values())[0].title())}
-            print(j2_c)"""
 
 
 if __name__ == "__main__":
     pessoa = Player("Rodrigo")
     print(pessoa.available_cards)
     Player.player1 = "Alan"
-    manilha: int = Carta().numero
-    print(Player.player1)
+    s = Player.count_play_start
+    s += 1
+    Player.count_play_start += 1
+    print(Player.count_play_start)
     # print(manilha)
     # print(Baralho.baralho)
-
-
-"""pessoa = Player("Rodrigo")
-print(pessoa.carta_a.naipe)
-print(pessoa.carta_b.numero_naipe)
-print(pessoa.carta_c.numero_naipe)
-print(pessoa.carta_a.get_baralho)
-print(Carta.baralho)
-Carta.reset_baralho()
-print(pessoa.carta_a.get_baralho)
-#print("carta1", pessoa.carta1)"""

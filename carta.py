@@ -6,7 +6,7 @@ class Carta:
                      {}.fromkeys(truco_numbers, "Espadas"),
                      {}.fromkeys(truco_numbers, "Copas"),
                      {}.fromkeys(truco_numbers, "Paus")]
-    card_force = (4, 5, 6, 7, 8, 9, 10, 11, 12, 1, 2, 3, "Moles", "Espadas", "Copas", "Paus")
+    card_force = (4, 5, 6, 7, 10, 11, 12, 1, 2, 3, "Moles", "Espadas", "Copas", "Paus")
     remove: tuple = (8, 9)
 
     def __init__(self):

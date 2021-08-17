@@ -4,7 +4,6 @@ from carta import Carta
 
 def main() -> None:
     import platform
-
     os = platform.system()
     if os not in ("Linux", "Windows"):
         print("\nO Euro truco não é compatível com o seu sistema operacional.")
@@ -36,15 +35,15 @@ def euro_truco() -> None:
         print()   
 """
 
-    #  inicio de ações para desenvolvedor
+    #  inicio de ações de desenvolvedor
     print("Informe o nome do jogador(a) número 1: Diego\n"
           "Informe o nome do jogador(a) número 2: Michele")
     players.append(Player("Diego"))
     players.append(Player("michele"))
-    if input().upper() == 'Q':
+    if input().upper() == 'Q':  # enter ou qualquer entrada para seguir normalmente
         print("Apenas números:")
         for p in players:
-            developer(p, (input("Carta 1: "), input("Carta 2: "), input("Carta 3: ")))
+            developer(p, *(input("Carta 1: "), input("Carta 2: "), input("Carta 3: ")))
 
     #  final
     write_cards(players)
@@ -54,10 +53,9 @@ def euro_truco() -> None:
 
 
 def developer(player, *args):
-    player.carta_a.numero = 1
-    player.carta_b.numero = 2
-    player.carta_c.numero = 3
-
+    player.carta_a.numero = args[0]
+    player.carta_b.numero = args[1]
+    player.carta_c.numero = args[2]
 
 
 def start_round(players: list) -> None:
@@ -89,7 +87,7 @@ def full_round_up_to_2_points(players: list, round_score=None):
         Player.count_play_round = Player.count_play_start
         Player.count_play_start += 1
     count_play: int = Player.count_play_round
-    winning_card: list = [[-1, 0, 0], [-1, 0, 0]]  #  [forca_carta, forca_naipe,
+    winning_card: list = [[-1, 0, 0], [-1, 0, 0]]  #  [forca_carta, forca_naipe, count
     count = 0
     #  round_score: list = [0, 0]  # ganha quem chegar a 2 pontos primeiro
     #  next_player: list = [[0, 0], [0, 0]]
@@ -111,7 +109,6 @@ def full_round_up_to_2_points(players: list, round_score=None):
         print("forceW: ", force, winning_card, "\n")
         if force[0] > winning_card[index_card][0]:
             winning_card[index_card] = force
-            #  next_player[index_card] = [count_play, count]  # index do 1º player da proxima rodada, acho que está errado
 
         print(winning_card, round_score)
 
@@ -130,19 +127,9 @@ def full_round_up_to_2_points(players: list, round_score=None):
             Player.score1 += 1
         else:
             Player.score2 += 1
-        #Player.count_play = next_player_index(next_player, round_score)
     else:
         Player.count_play = count_play
         full_round_up_to_2_points(players, round_score)
-
-    '''    # problema esta aqui %%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%%
-        if count % 2 == 0 and num_players == 2:  # verificar a precisão desses dois
-            winning_card, round_score = round_winner(winning_card, round_score)
-        elif count % 4 == 0 and num_players == 4:
-            winning_card, round_score = round_winner(winning_card, round_score)
-
-        print(round_score)  # debug
-    '''
 
 
 def card_force(card: Carta, count_play: int):
@@ -170,7 +157,7 @@ def round_winner(winning_card: list, round_score: list) -> tuple:
         card_1 = 11 if force_1 > force_2 else 0
 
     if card_1 > card_2:
-        if not any(round_score):  # n resolveu o problema ###########################################################################################
+        if not any(round_score):
             Player.first_score = [1, 0]
         round_score[0] += 1
         x: int = len(Player.players)
@@ -282,17 +269,6 @@ def write_cards(players):
                     f"B: {player.carta_b.numero} de {player.carta_b.naipe}\n"
                     f"C: {player.carta_c.numero} de {player.carta_c.naipe}\n")
         print(player)  # debug
-
-
-def verificar_quem_venceu():
-    pass
-
-
-def verifica_regras():
-    pass
-
-
-# passar algums fuções para cá, como a de criação de baralho.
 
 
 if __name__ == "__main__":

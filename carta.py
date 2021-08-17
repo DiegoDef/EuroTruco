@@ -53,10 +53,7 @@ class Carta:
     @numero.setter
     def numero(self, numero):
         """Muda o numero da carta para fins de testes"""
-        if numero in range(13) and numero not in self.remove:
-            self.__numero = numero
-        else:
-            print("Entrada não disponível para servir como número da carta, tente novamente.")
+        self.__numero = numero
 
     @naipe.setter
     def naipe(self, naipe):

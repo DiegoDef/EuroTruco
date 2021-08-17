@@ -1,5 +1,6 @@
-*.txt
 **cartas
+**cards
+**antigos
 **__pycache__
 **.idea/
 test.py

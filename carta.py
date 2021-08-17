@@ -62,3 +62,8 @@ class Carta:
             self.__naipe = naipe
         else:
             print("Entrada não disponível para servir como naipe da carta, tente novamente.")
+
+
+if __name__ == "__main__":
+    from euro_truco import main
+    main()

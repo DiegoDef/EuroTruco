@@ -74,12 +74,5 @@ class Player:
 
 
 if __name__ == "__main__":
-    pessoa = Player("Rodrigo")
-    print(pessoa.available_cards)
-    Player.player1 = "Alan"
-    s = Player.count_play_start
-    s += 1
-    Player.count_play_start += 1
-    print(Player.count_play_start)
-    # print(manilha)
-    # print(Baralho.baralho)
+    from euro_truco import main
+    main()

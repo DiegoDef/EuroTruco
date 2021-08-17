@@ -1,5 +1,5 @@
-from Player import Player
-from carta import Carta
+from models.player import Player
+from models.carta import Carta
 
 
 def main() -> None:
@@ -47,12 +47,16 @@ def euro_truco() -> None:
 
     #  final
     write_cards(players)
+    print("As CARtas de todos os jogadores foram gravadas em .txt "
+          "na pasta 'cartas' com o nome de cada um dos jogadores.\n"
+          "Cada jogador deve ter acesso apenas ao seu arquivo.\n"
+          "A cada rodada o arquivo é atualizado com as novas CARtas.")
 
     print("\nA partida vai começar, peguem suas CARtas e prepare-se para a batalha!")
     start_round(players)  # termina quando alguém chegar a 12 pontos
 
 
-def developer(player, *args):
+def developer(player, *args) -> None:
     player.carta_a.numero = args[0]
     player.carta_b.numero = args[1]
     player.carta_c.numero = args[2]
@@ -65,7 +69,7 @@ def start_round(players: list) -> None:
 
     print(f"A carta virada é: {Player.manilha.numero}\n")
     full_round_up_to_2_points(players)
-    reset_baralho_and_cards(players)
+    reset_all(players)
 
     print(f"\nPontuação total da partida: Time_1 {Player.score1} x "
           f"{Player.score2} Time_2\n")
@@ -76,11 +80,11 @@ def start_round(players: list) -> None:
         else:
             start_round(players)
     else:
-        if congratulation() == "S":
+        if congratulations() == "S":
             main()
 
 
-def full_round_up_to_2_points(players: list, round_score=None):
+def full_round_up_to_2_points(players: list, round_score=None) -> None:
     """Termina quando alguém chega a 2 pontos ou mais quando em truco"""
     if round_score is None:
         round_score = [0, 0]
@@ -95,15 +99,15 @@ def full_round_up_to_2_points(players: list, round_score=None):
 
     # "while sai quanto todos jogarem da rodada de um ponto"
     while count < len(players):
-        print(count, len(players))  # debug
+        #  print(count, len(players))  # debug
         # print(players)
         index_p = count_play % num_players
         player: Player = players[index_p]
         command: str = input(f"É a sua vez {player.name}, "
                              f"seus comandos disponíveis são: {player.available_cards}.\n"
-                             f"Insira o comando da carta que você quer jogar: ")
+                             f"Insira o comando da sua carta ou peça truco: ")
 
-        x: Carta = player.throw_card(command)
+        x: Carta = player.play_card(command)
         index_card: int = 0 if index_p in (0, 2) else 1
         force: tuple = card_force(x, count_play)
         print("forceW: ", force, winning_card, "\n")
@@ -123,16 +127,21 @@ def full_round_up_to_2_points(players: list, round_score=None):
     print(round_score)
 
     if max(round_score) >= 2:  # sem truco ainda
-        if round_score[0] >= 2:
-            Player.score1 += 1
-        else:
-            Player.score2 += 1
+        give_points(round_score)
     else:
         Player.count_play = count_play
         full_round_up_to_2_points(players, round_score)
 
 
-def card_force(card: Carta, count_play: int):
+def give_points(round_score) -> None:
+    points = Player.truco_points[1]
+    if round_score[0] >= 2:
+        Player.score1 += points
+    else:
+        Player.score2 += points
+
+
+def card_force(card: Carta, count_play: int) -> tuple:
     manilha: Carta = Player.manilha
     num = manilha.numero
     if num not in (7, 12):  # numero da manilha é + 1 que a carta virada com exceção em 12 e 7
@@ -154,7 +163,7 @@ def round_winner(winning_card: list, round_score: list) -> tuple:
     if card_1 == 10 and card_2 == 10:  # se os dois tem força 10 então é manilha e devem ser decididos por naipe
         force_1 = winning_card[0][1]
         force_2 = winning_card[1][1]
-        card_1 = 11 if force_1 > force_2 else 0
+        card_1 = 11 if force_1 > force_2 else 9
 
     if card_1 > card_2:
         if not any(round_score):
@@ -200,7 +209,8 @@ def draw(scores: list) -> list:  # draw completo sem testes profundos e truco
                 scores[0] += 1
                 x: int = len(Player.players)
                 name: str = Player.players[0] if x == 2 else " e ".join(Player.players[:2])
-                print(f"{name} ganh{'ou' if x == 2 else 'aram'} 1 ponto")
+                plural = ('ou' if x == 2 else 'aram', "s" if Player.truco_points > 1 else "")
+                print(f"%s ganh%s 1 ponto%s" % (name, plural[0], plural[1]))
                 return scores
             scores[1] += 1
             x: int = len(Player.players)
@@ -209,17 +219,7 @@ def draw(scores: list) -> list:  # draw completo sem testes profundos e truco
             return scores
 
 
-def next_player_index(next_player: list, round_score) -> list:  # verificar se funciona com 4  REMOVER
-    next1 = next_player[0][0] + 1  # +1 pois
-    next2 = next_player[1][0] + 1
-    r1 = round_score[0]
-    r2 = round_score[1]
-    if r1 != r2:
-        return next1 if r1 > r2 else next2
-    return next1 if next_player[0][1] > next_player[1][1] else next2
-
-
-def congratulation() -> str:
+def congratulations() -> str:
     print("\n<|##################################################################|>\n")
 
     if len(Player.players) == 2:
@@ -238,7 +238,7 @@ def congratulation() -> str:
     return answer
 
 
-def reset_baralho_and_cards(players) -> None:
+def reset_all(players) -> None:
     truco_numbers = list(range(1, 8)) + list(range(10, 13))
     Carta.baralho = [{}.fromkeys(truco_numbers, "moles"),
                      {}.fromkeys(truco_numbers, "espadas"),
@@ -251,9 +251,10 @@ def reset_baralho_and_cards(players) -> None:
         player.carta_c = Carta()
         player.available_cards = ["A", "B", "C"]
     write_cards(players)
+    Player.truco_points = [-1, 1]
 
 
-def write_cards(players):
+def write_cards(players) -> None:
     import platform
 
     os = platform.system()

@@ -16,14 +16,14 @@ def euro_truco() -> None:
     print("============= Seja bem vindo ao =============\n"
           "=========== Euro Truco simulator® ===========\n\n")
 
-    num_players: str = input("A partida poderá ter 2 ou 4 jogadores no total. "
-                             "Antes de começar, informe a quantidade de participantes (2 ou 4): ")
-    if num_players.upper() != "Q":
-        num_players = int(num_players)
+    num_players: int = int(input("A partida poderá ter 2 ou 4 jogadores no total. "
+                                 "Antes de começar, informe a quantidade de participantes (2 ou 4): "))
+    if num_players != "47":
+        num_players: int = int(num_players)
         while num_players not in (2, 4):
             if num_players not in (2, 4):
                 print("Entrada inválida, a quantidade deve ser de 2 ou 4.\n")
-                num_players
+                num_players = int(input("informe a quantidade de participantes (2 ou 4): "))
 
         if num_players == 2:
             print("\nOs jogadores 1 e 2 se enfrentarão.")
@@ -259,12 +259,9 @@ def congratulations() -> str:
     return answer
 
 
-def reset_all(players) -> None:
-    truco_numbers = list(range(1, 8)) + list(range(10, 13))
-    Carta.baralho = [{}.fromkeys(truco_numbers, "moles"),
-                     {}.fromkeys(truco_numbers, "espadas"),
-                     {}.fromkeys(truco_numbers, "copas"),
-                     {}.fromkeys(truco_numbers, "paus")]
+def reset_all(players: list) -> None:
+    from models.carta import new_baralho
+    Carta.baralho = new_baralho()
     Player.manilha = Carta()  # reseta manilha da partida
     for player in players:
         player.carta_a = Carta()
@@ -275,7 +272,7 @@ def reset_all(players) -> None:
     Player.truco_points = [-1, 1]
 
 
-def write_cards(players) -> None:
+def write_cards(players: list) -> None:
     import platform
 
     os = platform.system()

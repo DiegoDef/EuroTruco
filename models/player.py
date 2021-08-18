@@ -2,12 +2,13 @@ from models.carta import Carta
 
 
 class Player:
-    players = []
-    score1 = 0  # pontuacao do jogo time 1 e 2, ganha quem chegar a 12
-    score2 = 0
-    count_play_start = 0  # index do próximo jogador no inicio da rodada
-    count_play_round = 0  # index do próximo jogador ao decorrer da rodada
-    truco_points = [-1, 1]  # [who asked to truco=0 or 1, points=[1, 3 or 6 or 9 or 12]
+    players: list = []
+    score1: int = 0  # pontuacao do jogo time 1 e 2, ganha quem chegar a 12
+    score2: int = 0
+    count_play_start: int = 0  # index do próximo jogador no inicio da rodada
+    count_play_round: int = 0  # index do próximo jogador ao decorrer da rodada
+    truco_points: list = [-1, 1]  # [who asked to truco=0 or 1, points=[1, 3 or 6 or 9 or 12]
+    played_cards: list = [[], [], [], []]
 
     first_score = [0, 0]
     manilha: Carta = Carta()
@@ -20,10 +21,10 @@ class Player:
         self.__available_cards: list = ["A", "B", "C"]
         Player.players.append(player_name)
 
-    def play_card(self, id_carta: str = "") -> Carta:
+    def play_card(self, id_carta: str = "", mao_de_onze: bool = False) -> tuple:
         if id_carta == "":
             id_carta = input("Insira o comando da sua carta: ")
-        cartas = {"A": self.__carta_a, "B": self.__carta_b, "C": self.__carta_c}
+        cartas: dict = {"A": self.__carta_a, "B": self.__carta_b, "C": self.__carta_c}
         id_carta = id_carta.upper()
 
         while id_carta not in self.__available_cards:
@@ -36,8 +37,9 @@ class Player:
             print()
         self.__available_cards.remove(id_carta)
         card: Carta = cartas[id_carta]
-        print(f"Você jogou a CARta {card.numero} de {card.naipe}\n")
-        return card
+        if not mao_de_onze:
+            print(f"Você jogou a CARta {card.numero} de {card.naipe}\n")
+        return card, id_carta
 
     def ask_truco(self, ask: str) -> None:
         truco_points = Player.truco_points[1]

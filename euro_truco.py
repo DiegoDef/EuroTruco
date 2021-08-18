@@ -13,39 +13,43 @@ def main() -> None:
 
 def euro_truco() -> None:
     players: list = []
-    quant_j = 0
     print("============= Seja bem vindo ao =============\n"
           "=========== Euro Truco simulator® ===========\n\n")
 
-    """while quant_j not in (2, 4):
-        quant_j = int(input("A partida poderá ter 2 ou 4 jogadores no total. "
-                            "Antes de começar, informe a quantidade de participantes (2 ou 4): "))
-        if quant_j not in (2, 4):
-            print("Entrada inválida, a quantidade deve ser de 2 ou 4.\n")
-        
-        if quant_j == 2:
-        print("\nOs jogadores 1 e 2 se enfrentarão.")
-        while len(players) < 2:
-            players.append(Player(input(f"Informe o nome do jogador(a) número {len(players) + 1}: ")))
+    num_players: str = input("A partida poderá ter 2 ou 4 jogadores no total. "
+                             "Antes de começar, informe a quantidade de participantes (2 ou 4): ")
+    if num_players.upper() != "Q":
+        num_players = int(num_players)
+        while num_players not in (2, 4):
+            if num_players not in (2, 4):
+                print("Entrada inválida, a quantidade deve ser de 2 ou 4.\n")
+                num_players
+
+        if num_players == 2:
+            print("\nOs jogadores 1 e 2 se enfrentarão.")
+            while len(players) < 2:
+                players.append(Player(input(f"Informe o nome do jogador(a) número {len(players) + 1}: ")))
+        else:
+            print("Os jogadores 1 e 2 enfrentarão os jogadores 3 e 4.")
+            while len(players) < 4:
+                players.append(Player(input(f"\nInforme o nome do jogador(a) número {len(players) + 1}: ")))
+            players.insert(2, players.pop(1))  # Ajeita na ordem de jogadores utilizado no jogo
+            print()
     else:
-        print("Os jogadores 1 e 2 enfrentarão os jogadores 3 e 4.")
-        while len(players) < 4:
-            players.append(Player(input(f"\nInforme o nome do jogador(a) número {len(players) + 1}: ")))
-        players.insert(2, players.pop(1))  # Ajeita na ordem de jogadores utilizado no jogo
-        print()   
-"""
+        #  inicio de ações de desenvolvedor
+        print("Informe o nome do jogador(a) número 1: Diego\n"
+              "Informe o nome do jogador(a) número 2: Michele")
+        players.append(Player("Diego"))
+        players.append(Player("michele"))
+        if input().upper() == "Q":
+            print("Apenas números:")
+            for p in players:
+                developer(p, *(input("Carta 1: "), input("Carta 2: "), input("Carta 3: ")))
+            Player.score1 = int(input("Score 1: "))
+            Player.score2 = int(input("Score 1: "))
+            print()
 
-    #  inicio de ações de desenvolvedor
-    print("Informe o nome do jogador(a) número 1: Diego\n"
-          "Informe o nome do jogador(a) número 2: Michele")
-    players.append(Player("Diego"))
-    players.append(Player("michele"))
-    if input().upper() == 'Q':  # enter ou qualquer entrada para seguir normalmente
-        print("Apenas números:")
-        for p in players:
-            developer(p, *(input("Carta 1: "), input("Carta 2: "), input("Carta 3: ")))
-
-    #  final
+        #  final
     write_cards(players)
     print("As CARtas de todos os jogadores foram gravadas em .txt "
           "na pasta 'cartas' com o nome de cada um dos jogadores.\n"
@@ -62,13 +66,11 @@ def developer(player, *args) -> None:
     player.carta_c.numero = args[2]
 
 
-def start_round(players: list) -> None:
-    mao_de_11: bool = False  # com a mãe de onze True, as cartas não são mostradas antes de jogar
-
+def start_round(players: list, mao_de_11: bool = False) -> None:
     print("\n|##################################################################|>\n")
 
     print(f"A carta virada é: {Player.manilha.numero}\n")
-    full_round_up_to_2_points(players)
+    full_round_up_to_2_points(players, mao_de_11)
     reset_all(players)
 
     print(f"\nPontuação total da partida: Time_1 {Player.score1} x "
@@ -76,7 +78,8 @@ def start_round(players: list) -> None:
 
     if max(Player.score1, Player.score2) < 12:
         if Player.score1 == 11 and Player.score2 == 11:
-            mao_de_11 = True
+            mao_de_11 = True  # com a mãe de onze True, as cartas não são mostradas antes de jogar
+            start_round(players, mao_de_11)
         else:
             start_round(players)
     else:
@@ -84,33 +87,33 @@ def start_round(players: list) -> None:
             main()
 
 
-def full_round_up_to_2_points(players: list, round_score=None) -> None:
+def full_round_up_to_2_points(players: list, mao_de_11: bool = False, round_score=None) -> None:
     """Termina quando alguém chega a 2 pontos ou mais quando em truco"""
     if round_score is None:
         round_score = [0, 0]
         Player.count_play_round = Player.count_play_start
         Player.count_play_start += 1
+    num_players: int = len(players)
     count_play: int = Player.count_play_round
-    winning_card: list = [[-1, 0, 0], [-1, 0, 0]]  #  [forca_carta, forca_naipe, count
+    winning_card: list = [[-1, 0, 0], [-1, 0, 0]]  # [forca_carta, forca_naipe, count
     count = 0
+
     #  round_score: list = [0, 0]  # ganha quem chegar a 2 pontos primeiro
     #  next_player: list = [[0, 0], [0, 0]]
-    num_players: int = len(players)
 
     # "while sai quanto todos jogarem da rodada de um ponto"
-    while count < len(players):
+    while count < num_players:
         #  print(count, len(players))  # debug
         # print(players)
         index_p = count_play % num_players
         player: Player = players[index_p]
         command: str = input(f"É a sua vez {player.name}, "
                              f"seus comandos disponíveis são: {player.available_cards}.\n"
-                             f"Insira o comando da sua carta ou peça truco: ")
-
-        x: Carta = player.play_card(command)
+                             f"Insira o comando da sua carta ou peça truco: ").upper()
+        x, command = player.play_card(command, mao_de_11)
         index_card: int = 0 if index_p in (0, 2) else 1
+        Player.played_cards[index_p].append(command)
         force: tuple = card_force(x, count_play)
-        print("forceW: ", force, winning_card, "\n")
         if force[0] > winning_card[index_card][0]:
             winning_card[index_card] = force
 
@@ -121,16 +124,20 @@ def full_round_up_to_2_points(players: list, round_score=None) -> None:
         count += 1
         count_play += 1
         Player.count_play_round = count_play
+    #if True:
+    #    mao_de_onze(cards, players)
 
     winning_card, round_score = round_winner(winning_card, round_score)  # tirar winning card
 
     print(round_score)
 
-    if max(round_score) >= 2:  # sem truco ainda
+    if max(round_score) >= 2:
+        if mao_de_11 is True:
+            mao_de_onze(players)
         give_points(round_score)
     else:
         Player.count_play = count_play
-        full_round_up_to_2_points(players, round_score)
+        full_round_up_to_2_points(players, mao_de_11, round_score)
 
 
 def give_points(round_score) -> None:
@@ -139,6 +146,20 @@ def give_points(round_score) -> None:
         Player.score1 += points
     else:
         Player.score2 += points
+
+
+def mao_de_onze(players: list):
+    count = 0
+    cards: list = Player.played_cards
+    for player in players:
+        print(f"O(A) jogador(a) {player.name} jogou as seguintes cartas, em ordem de jogada: ")
+        card_commands: dict = {"A": player.carta_a, "B": player.carta_b, "C": player.carta_c}
+        print("C", count)
+        for c, y in zip(cards[count], range(len(cards[count]))):
+            card = card_commands[c]
+            print(f"CARta {y+1}: {card.numero} de {card.naipe}")
+        print()
+        count += 1
 
 
 def card_force(card: Carta, count_play: int) -> tuple:
@@ -151,6 +172,7 @@ def card_force(card: Carta, count_play: int) -> tuple:
 
     force = Carta.card_force
     if card.numero != manilha:
+        print(card.numero, card.naipe)
         return force.index(card.numero), force.index(card.naipe), count_play
     else:
         print("Você jogou o coringa!!!\n")
@@ -158,8 +180,8 @@ def card_force(card: Carta, count_play: int) -> tuple:
 
 
 def round_winner(winning_card: list, round_score: list) -> tuple:
-    card_1 = winning_card[0][0]
-    card_2 = winning_card[1][0]
+    card_1: int = winning_card[0][0]
+    card_2: int = winning_card[1][0]
     if card_1 == 10 and card_2 == 10:  # se os dois tem força 10 então é manilha e devem ser decididos por naipe
         force_1 = winning_card[0][1]
         force_2 = winning_card[1][1]
@@ -182,7 +204,6 @@ def round_winner(winning_card: list, round_score: list) -> tuple:
         print(f"{name} ganh{'ou' if x == 2 else 'aram'} 1 ponto!\n")
         Player.count_play_round = winning_card[1][2]
     else:
-        print("empate")  # debug
         index1: int = winning_card[0][2]
         index2: int = winning_card[1][2]
         Player.count_play_round = index1 if index1 > index2 else index2  # quem empachou começa o próximo round
@@ -224,15 +245,15 @@ def congratulations() -> str:
 
     if len(Player.players) == 2:
         p1 = Player.players[0] if Player.score1 >= 12 else Player.players[1]
-        print(f"Parabéns {p1} você foi o(a) grande vencedor(a)!!!")
+        print(f"Parabéns {p1} você foi o(a) grande vencedor(a)!!!\n")
     else:
         p1 = Player.players[0] if Player.score1 >= 12 else Player.players[2]
         p2 = Player.players[1] if Player.score1 >= 12 else Player.players[3]
-        print(f"Parabéns {p1} e {p2}, você venceram!!!")
+        print(f"Parabéns {p1} e {p2}, você venceram!!!\n")
 
-    answer: str = input('Gostaria de jogar outra partida? ("S" para sim ou "N" para não): ')
+    answer: str = input('Gostaria de jogar outra partida? ("S" para sim ou "N" para não): ').upper()
     while answer.upper() not in ("S", "N"):
-        answer = input('Entrada incorreta, por favor digite apenas "S" para sim ou "N" para não: ')
+        answer = input('Entrada incorreta, por favor digite apenas "S" para sim ou "N" para não: ').upper()
     print("\n\n")
 
     return answer

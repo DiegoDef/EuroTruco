@@ -110,7 +110,7 @@ def full_round_up_to_2_points(players: list, mao_de_11: bool = False, round_scor
         command: str = input(f"É a sua vez {player.name}, "
                              f"seus comandos disponíveis são: {player.available_cards}.\n"
                              f"Insira o comando da sua carta ou peça truco: ").upper()
-        x, command = player.play_card(command, mao_de_11)
+        x, command = player.throw_card(command, mao_de_11)
         index_card: int = 0 if index_p in (0, 2) else 1
         Player.played_cards[index_p].append(command)
         force: tuple = card_force(x, count_play)

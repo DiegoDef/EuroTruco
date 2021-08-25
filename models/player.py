@@ -21,7 +21,7 @@ class Player:
         self.__available_cards: list = ["A", "B", "C"]
         Player.players.append(player_name)
 
-    def play_card(self, id_carta: str = "", mao_de_onze: bool = False) -> tuple:
+    def throw_card(self, id_carta: str = "", mao_de_onze: bool = False) -> tuple:
         if id_carta == "":
             id_carta = input("Insira o comando da sua carta: ")
         cartas: dict = {"A": self.__carta_a, "B": self.__carta_b, "C": self.__carta_c}

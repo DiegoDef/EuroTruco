@@ -1,6 +1,6 @@
 package objects;
 
-import objects.trucoPoints.AbstractTrucoPoints;
+import objects.trucoPoints.TrucoPoints;
 import objects.trucoPoints.InitialPoints;
 
 import java.util.Scanner;
@@ -10,7 +10,7 @@ public class EuroTruco {
     private final Set<Player> players;
     private Integer teamPoints1 = 0;
     private Integer teamPoints2 = 0;
-    private AbstractTrucoPoints abstractTrucoPoints = new InitialPoints();
+    private TrucoPoints trucoPoints = new InitialPoints();
 
     public EuroTruco(Set<Player> players) {
         this.players = players;

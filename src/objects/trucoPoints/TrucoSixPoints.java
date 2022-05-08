@@ -2,18 +2,18 @@ package objects.trucoPoints;
 
 import objects.EuroTruco;
 
-public class InitialPoints extends TrucoPoints {
+public class TrucoSixPoints extends TrucoPoints {
 
     private TrucoPoints nextTrucoPoints;
 
-    public InitialPoints(EuroTruco euroTruco) {
-        super(1, euroTruco);
+    public TrucoSixPoints(EuroTruco euroTruco) {
+        super(6, euroTruco);
     }
 
     @Override
     public TrucoPoints getNextTruco() {
         if(nextTrucoPoints == null) {
-            this.nextTrucoPoints = new TrucoThreePoints(euroTruco);
+            this.nextTrucoPoints = new TrucoNinePoints(euroTruco);
         }
         return this.nextTrucoPoints;
     }

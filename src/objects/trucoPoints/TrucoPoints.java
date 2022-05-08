@@ -1,21 +1,31 @@
 package objects.trucoPoints;
 
+import objects.EuroTruco;
 import objects.TrucoTeam;
 
 public abstract class TrucoPoints {
-    protected final Integer points;
-    protected TrucoTeam lastTeamAskedForTruco;
 
-    public TrucoPoints(Integer points) {
+    protected final EuroTruco euroTruco;
+    private final Integer points;
+    private TrucoTeam lastTeamAskedForTruco;
+
+    public TrucoPoints(Integer points, EuroTruco euroTruco) {
         this.points = points;
+        this.euroTruco = euroTruco;
     }
 
-    public void askForTruco(TrucoTeam teamAskedForTruco) {
-        if (teamAskedForTruco != lastTeamAskedForTruco) {
-            //aumentar truco
+    public boolean askForTruco(TrucoTeam teamAskedForTruco) {
+        if (teamAskedForTruco != this.lastTeamAskedForTruco && points < 12) {
+            this.lastTeamAskedForTruco = teamAskedForTruco;
+
+            TrucoPoints nextTrucoPoints = this.getNextTruco();
+            euroTruco.setTrucoPoints(nextTrucoPoints);
+            return true;
         }
-        // o mesmo time que pediu truco pela ultima vez nao pode pedir de novo
+        return false;
     }
+
+    public abstract TrucoPoints getNextTruco();
 
     public Integer getPoints() {
         return this.points;

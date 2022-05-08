@@ -10,7 +10,7 @@ public class EuroTruco {
     private final Set<Player> players;
     private Integer teamPoints1 = 0;
     private Integer teamPoints2 = 0;
-    private TrucoPoints trucoPoints = new InitialPoints();
+    private TrucoPoints trucoPoints = new InitialPoints(this);
 
     public EuroTruco(Set<Player> players) {
         this.players = players;
@@ -26,5 +26,9 @@ public class EuroTruco {
 
     public void addPointsToTeam2() {
         this.teamPoints2++;
+    }
+
+    public void setTrucoPoints(TrucoPoints nextTrucoPoints) {
+        this.trucoPoints = nextTrucoPoints;
     }
 }

@@ -1,16 +1,14 @@
 package objects;
 
-import objects.trucoPoints.TrucoPoints;
-import objects.trucoPoints.InitialPoints;
-
 import java.util.Scanner;
 import java.util.Set;
 
 public class EuroTruco {
+
     private final Set<Player> players;
     private Integer teamPoints1 = 0;
     private Integer teamPoints2 = 0;
-    private TrucoPoints trucoPoints = new InitialPoints(this);
+    private AskForTrucoManager askForTrucoManager = new AskForTrucoManager();
 
     public EuroTruco(Set<Player> players) {
         this.players = players;
@@ -28,7 +26,8 @@ public class EuroTruco {
         this.teamPoints2++;
     }
 
-    public void setTrucoPoints(TrucoPoints nextTrucoPoints) {
-        this.trucoPoints = nextTrucoPoints;
+    public void setTrucoPoints() {
+        this.askForTrucoManager = new AskForTrucoManager();
     }
+
 }
